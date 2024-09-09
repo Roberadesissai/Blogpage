@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile - Unique Blog{% endblock %}
+
+{% block breadcrumbs %}
+    {{ super() }}
+    <span class="mx-2 text-gray-400">/</span>
+    <a href="{{ url_for('main.profile') }}" class="text-indigo-600 hover:text-indigo-800">Profile</a>
+    <span class="mx-2 text-gray-400">/</span>
+    <span class="text-gray-600">Edit</span>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-3">
+            <h1 class="text-2xl font-bold text-white flex items-center">
+                <i class="fas fa-user-edit mr-3 text-white"></i>
+                Edit Your Profile
+            </h1>
+        </div>
+        <div class="p-6">
+            <form method="POST" action="" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="space-y-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="relative w-24 h-24">
+                            <img src="{{ current_user.profile_picture or url_for('static', filename='images/default_profile.jpg') }}" alt="Profile Picture" class="rounded-full w-full h-full object-cover border-2 border-indigo-300">
+                            <label for="profile_picture" class="absolute bottom-0 right-0 bg-indigo-600 text-white rounded-full p-1.5 cursor-pointer hover:bg-indigo-700 transition duration-300">
+                                <i class="fas fa-camera text-sm"></i>
+                                <input type="file" id="profile_picture" name="profile_picture" class="hidden">
+                            </label>
+                        </div>
+                        <div class="flex-grow">
+                            <div class="mb-3">
+                                {{ form.username.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                                <div class="relative rounded-md shadow-sm">
+                                    {{ form.username(class="focus:ring-indigo-500 focus:border-indigo-500 block w-full px-3 py-2 sm:text-sm border border-gray-300 rounded-md") }}
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-user text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                {{ form.email.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                                <div class="relative rounded-md shadow-sm">
+                                    {{ form.email(class="focus:ring-indigo-500 focus:border-indigo-500 block w-full px-3 py-2 sm:text-sm border border-gray-300 rounded-md") }}
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-envelope text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        {{ form.bio.label(class="block text-sm font-medium text-gray-700 mb-1") }}
+                        <div class="relative rounded-md shadow-sm">
+                            {{ form.bio(class="focus:ring-indigo-500 focus:border-indigo-500 block w-full px-3 py-2 sm:text-sm border border-gray-300 rounded-md", rows="3") }}
+                            <div class="absolute top-2 right-2">
+                                <i class="fas fa-quote-right text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Additional Information</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div>
+                                <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                                <div class="relative rounded-md shadow-sm">
+                                    <input type="text" name="location" id="location" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full px-3 py-2 sm:text-sm border border-gray-300 rounded-md">
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-map-marker-alt text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="website" class="block text-sm font-medium text-gray-700 mb-1">Website</label>
+                                <div class="relative rounded-md shadow-sm">
+                                    <input type="url" name="website" id="website" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full px-3 py-2 sm:text-sm border border-gray-300 rounded-md">
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-globe text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        {{ form.submit(class="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500") }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

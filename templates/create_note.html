@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Craft Your Masterpiece - Knowledge Nexus{% endblock %}
+{% block breadcrumbs %}
+    {{ super() }}
+    <span class="mx-5 text-gray-500 dark:text-gray-500">/</span>
+    <span class="text-blue-600 dark:text-blue-400">Create Note</span>
+{% endblock %}
+
+
+{% block content %}
+<div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-2">Craft Your Masterpiece</h1>
+        <p class="text-gray-600 mb-8">Share your knowledge and inspire others</p>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-8">
+            {{ form.hidden_tag() }}
+            <div class="bg-white shadow-2xl rounded-3xl p-8 space-y-6">
+                <!-- Title Input -->
+                <div class="relative group">
+                    <input type="text" id="title" name="title" required class="peer w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-indigo-600 placeholder-transparent pt-5 pb-2">
+                    <label for="title" class="absolute left-0 top-5 text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-5 peer-focus:top-0 peer-focus:text-sm peer-focus:text-indigo-600">Title your masterpiece</label>
+                </div>
+
+                <!-- Summary Input -->
+                <div class="relative group">
+                    <textarea id="summary" name="summary" rows="3" required class="peer w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-indigo-600 placeholder-transparent pt-5 pb-2 resize-none"></textarea>
+                    <label for="summary" class="absolute left-0 top-5 text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-5 peer-focus:top-0 peer-focus:text-sm peer-focus:text-indigo-600">Craft a compelling summary</label>
+                </div>
+
+                <!-- Content Input -->
+                <div class="relative group">
+                    <textarea id="content" name="content" rows="10" required class="peer w-full border-2 border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-indigo-600 p-4 resize-none"></textarea>
+                    <label for="content" class="absolute left-4 -top-3 bg-white px-2 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-indigo-600">Share your knowledge</label>
+                </div>
+
+                <!-- Subject Selection -->
+                <div class="relative">
+                    <select id="subject" name="subject" required class="w-full appearance-none bg-white border-2 border-gray-300 rounded-lg text-gray-700 py-3 px-4 pr-8 focus:outline-none focus:border-indigo-600">
+                        <option value="">Select a subject</option>
+                        <option value="math">🧮 Math</option>
+                        <option value="science">🧪 Science</option>
+                        <option value="history">📜 History</option>
+                        <option value="literature">📚 Literature</option>
+                        <option value="arts">🎨 Arts</option>
+                        <option value="computer_science">💻 Computer Science</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+
+                <!-- Image Upload -->
+                <div class="relative group">
+                    <input type="file" id="image" name="image" class="hidden" onchange="updateFileName()">
+                    <label for="image" class="cursor-pointer flex items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg text-gray-600 hover:border-indigo-600 hover:text-indigo-600 transition-colors duration-300">
+                        <div class="flex flex-col items-center">
+                            <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <span id="file-name">Illustrate your ideas (optional)</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- AI Enhancement Toggle -->
+                <div class="flex items-center space-x-3">
+                    <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                        <input type="checkbox" name="use_ai" id="use_ai" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                        <label for="use_ai" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                    </div>
+                    <span class="text-gray-700">Enhance with AI magic ✨</span>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex justify-end">
+                <button type="submit" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                    Share Your Wisdom
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .toggle-checkbox:checked {
+        @apply: right-0 border-indigo-600;
+        right: 0;
+        border-color: #4f46e5;
+    }
+    .toggle-checkbox:checked + .toggle-label {
+        @apply: bg-indigo-600;
+        background-color: #4f46e5;
+    }
+</style>
+
+<script>
+    function updateFileName() {
+        const input = document.getElementById('image');
+        const fileName = document.getElementById('file-name');
+        if (input.files.length > 0) {
+            fileName.textContent = input.files[0].name;
+        } else {
+            fileName.textContent = 'Illustrate your ideas (optional)';
+        }
+    }
+</script>
+{% endblock %}
