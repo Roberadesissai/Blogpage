@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="h-full font-poppins">
+<body class="h-full font-poppins bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
     <div class="min-h-full">
         <div class="fixed top-0 left-0 right-0 z-50">
             <nav class="bg-gray-800 font-sans" x-data="{ mobileMenuOpen: false }">
@@ -178,7 +178,7 @@
         </div>
 
         <main class="pt-24 px-4 sm:px-6 lg:px-8"> <!-- Adjusted padding-top -->
-            <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div class="sm:px-6 lg:px-8">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
