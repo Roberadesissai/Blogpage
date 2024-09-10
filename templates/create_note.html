@@ -1,115 +1,280 @@
 {% extends "base.html" %}
 
-{% block title %}Craft Your Masterpiece - Knowledge Nexus{% endblock %}
-{% block breadcrumbs %}
-{{ super() }}
-<span class="mx-5 text-gray-500 dark:text-gray-500">/</span>
-<span class="text-blue-600 dark:text-blue-400 flex items-center">
-    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-        </path>
-    </svg>
-    Create Note
-</span>
-{% endblock %}
-
+{% block title %}Craft Your Insight - Knowledge Nexus{% endblock %}
 
 {% block content %}
 <div class="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto">
-        <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-2">Craft Your Masterpiece</h1>
-        <p class="text-gray-600 mb-8">Share your knowledge and inspire others</p>
+    <div class="max-w-3xl mx-auto">
+        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-2 text-center">Craft Your Insight</h1>
+        <p class="text-gray-600 mb-6 text-center">Illuminate minds with your unique perspective</p>
 
-        <form method="POST" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
             {{ form.hidden_tag() }}
-            <div class="bg-white shadow-2xl rounded-3xl p-8 space-y-6">
+            <div class="bg-white shadow-2xl rounded-lg p-8 space-y-6 relative overflow-hidden" style="background-image: linear-gradient(#f1f5f9 1px, transparent 1px), linear-gradient(90deg, #f1f5f9 1px, transparent 1px); background-size: 20px 20px;">
+                <div class="absolute top-0 right-0 h-16 w-16 bg-yellow-200 rounded-bl-full shadow-md"></div>
+                
                 <!-- Title Input -->
-                <div class="relative group">
-                    <input type="text" id="title" name="title" required class="peer w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-indigo-600 placeholder-transparent pt-5 pb-2">
-                    <label for="title" class="absolute left-0 top-5 text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-5 peer-focus:top-0 peer-focus:text-sm peer-focus:text-indigo-600">Title your masterpiece</label>
+                <div class="relative">
+                    <input type="text" id="title" name="title" required class="peer w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-indigo-600 placeholder-transparent pt-4 pb-2 px-2 bg-transparent">
+                    <label for="title" class="absolute left-2 -top-2 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:-top-2 peer-focus:text-sm peer-focus:text-indigo-600">
+                        <svg class="w-5 h-5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                        Title your masterpiece
+                    </label>
                 </div>
 
                 <!-- Summary Input -->
-                <div class="relative group">
-                    <textarea id="summary" name="summary" rows="3" required class="peer w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-indigo-600 placeholder-transparent pt-5 pb-2 resize-none"></textarea>
-                    <label for="summary" class="absolute left-0 top-5 text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-5 peer-focus:top-0 peer-focus:text-sm peer-focus:text-indigo-600">Craft a compelling summary</label>
+                <div class="relative">
+                    <textarea id="summary" name="summary" rows="3" required class="peer w-full border-2 border-gray-300 text-gray-900 focus:outline-none focus:border-indigo-600 placeholder-transparent p-2 rounded-lg resize-none bg-transparent"></textarea>
+                    <label for="summary" class="absolute left-2 -top-2 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-2 peer-focus:text-sm peer-focus:text-indigo-600 bg-white px-1">
+                        <svg class="w-5 h-5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        Craft a compelling summary
+                    </label>
                 </div>
 
                 <!-- Content Input -->
-                <div class="relative group">
-                    <textarea id="content" name="content" rows="10" required class="peer w-full border-2 border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-indigo-600 p-4 resize-none"></textarea>
-                    <label for="content" class="absolute left-4 -top-3 bg-white px-2 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-4 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-indigo-600">Share your knowledge</label>
+                <div class="relative">
+                    <textarea id="content" name="content" rows="10" required class="peer w-full border-2 border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-indigo-600 p-2 resize-none bg-transparent"></textarea>
+                    <label for="content" class="absolute left-2 -top-2 bg-white px-1 text-sm text-gray-600 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-focus:-top-2 peer-focus:text-sm peer-focus:text-indigo-600">
+                        <svg class="w-5 h-5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Share your knowledge
+                    </label>
                 </div>
 
                 <!-- Subject Selection -->
                 <div class="relative">
-                    <select id="subject" name="subject" required class="w-full appearance-none bg-white border-2 border-gray-300 rounded-lg text-gray-700 py-3 px-4 pr-8 focus:outline-none focus:border-indigo-600">
+                    <select id="subject" name="subject" required class="w-full appearance-none bg-transparent border-2 border-gray-300 rounded-lg text-gray-700 py-2 px-4 pr-8 focus:outline-none focus:border-indigo-600">
                         <option value="">Select a subject</option>
-                        <option value="math">🧮 Math</option>
-                        <option value="science">🧪 Science</option>
-                        <option value="history">📜 History</option>
-                        <option value="literature">📚 Literature</option>
-                        <option value="arts">🎨 Arts</option>
+                        <option value="math">🧮 Mathematics</option>
+                        <option value="physics">⚛️ Physics</option>
+                        <option value="chemistry">🧪 Chemistry</option>
+                        <option value="biology">🧬 Biology</option>
                         <option value="computer_science">💻 Computer Science</option>
+                        <option value="literature">📚 Literature</option>
+                        <option value="history">📜 History</option>
+                        <option value="geography">🌍 Geography</option>
+                        <option value="art">🎨 Art</option>
+                        <option value="music">🎵 Music</option>
+                        <option value="philosophy">🤔 Philosophy</option>
+                        <option value="psychology">🧠 Psychology</option>
+                        <option value="sociology">👥 Sociology</option>
+                        <option value="economics">📊 Economics</option>
+                        <option value="political_science">🏛️ Political Science</option>
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                         <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                     </div>
-                </div>
-
-                <!-- Image Upload -->
-                <div class="relative group">
-                    <input type="file" id="image" name="image" class="hidden" onchange="updateFileName()">
-                    <label for="image" class="cursor-pointer flex items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg text-gray-600 hover:border-indigo-600 hover:text-indigo-600 transition-colors duration-300">
-                        <div class="flex flex-col items-center">
-                            <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <span id="file-name">Illustrate your ideas (optional)</span>
-                        </div>
+                    <label for="subject" class="absolute left-2 -top-2 bg-white px-1 text-sm text-gray-600">
+                        <svg class="w-5 h-5 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                        </svg>
+                        Choose a subject
                     </label>
                 </div>
 
-                <!-- AI Enhancement Toggle -->
-                <div class="flex items-center space-x-3">
-                    <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-                        <input type="checkbox" name="use_ai" id="use_ai" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
-                        <label for="use_ai" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                    </div>
-                    <span class="text-gray-700">Enhance with AI magic ✨</span>
+                <!-- Image Upload -->
+                <div class="relative">
+                    <input type="file" id="image" name="image" class="hidden" onchange="updateFileName()">
+                    <label for="image" class="cursor-pointer flex items-center justify-center w-full h-12 border-2 border-gray-300 border-dashed rounded-lg text-gray-600 hover:border-indigo-600 hover:text-indigo-600 transition-colors duration-300">
+                        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span id="file-name">Illustrate your ideas (optional)</span>
+                    </label>
+                </div>
+
+ <!-- AI Toggle and Submit Button -->
+ <div class="flex items-center justify-between space-x-4 mt-8">
+    <div class="relative">
+        <input type="checkbox" id="use_ai" name="use_ai" class="sr-only">
+        <label for="use_ai" class="flex items-center cursor-pointer">
+            <div class="relative">
+                <div class="w-14 h-8 bg-gray-300 rounded-full shadow-inner"></div>
+                <div class="dot absolute w-10 h-10 bg-white rounded-full shadow -left-1 -top-1 transition transform duration-300 ease-in-out flex items-center justify-center text-gray-700 hover:text-indigo-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
                 </div>
             </div>
-
-            <!-- Submit Button -->
-            <div class="flex justify-end">
-                <button type="submit" class="px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
-                    Share Your Wisdom
-                </button>
+            <div class="ml-3 text-gray-700 font-medium">
+                AI Enhance
             </div>
-        </form>
+        </label>
     </div>
+    <button type="submit" id="submitBtn" class="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center">
+        <span>Share Wisdom</span>
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+        </svg>
+    </button>
+</div>
+</div>
+</form>
+</div>
+</div>
+
+<!-- Futuristic AI Processing Overlay -->
+<div id="aiProcessingOverlay" class="fixed inset-0 bg-gray-900 bg-opacity-80 hidden items-center justify-center z-50">
+<div class="bg-black bg-opacity-70 p-8 rounded-lg shadow-xl flex flex-col items-center max-w-md w-full mx-4">
+<div class="ai-loader mb-8">
+<svg class="ai-circular-loader" viewBox="25 25 50 50">
+<circle class="ai-path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10"/>
+</svg>
+<div class="ai-particles"></div>
+</div>
+<h2 class="text-2xl font-bold text-indigo-300 mb-4 text-center">AI Enhancement in Progress</h2>
+<p class="text-indigo-100 mb-4 text-center">Analyzing and enhancing your content with advanced artificial intelligence algorithms...</p>
+<div class="ai-progress-bar">
+<div class="ai-progress"></div>
+</div>
+</div>
 </div>
 
 <style>
-    .toggle-checkbox:checked {
-        @apply: right-0 border-indigo-600;
-        right: 0;
-        border-color: #4f46e5;
-    }
-    .toggle-checkbox:checked + .toggle-label {
-        @apply: bg-indigo-600;
-        background-color: #4f46e5;
-    }
+/* Existing styles */
+#use_ai:checked ~ label .dot {
+transform: translateX(100%);
+background-color: #4f46e5;
+}
+#use_ai:checked ~ label .dot svg {
+color: white;
+}
+select {
+max-height: 200px;
+overflow-y: auto;
+}
+
+/* New AI Loader Styles */
+.ai-loader {
+position: relative;
+width: 150px;
+height: 150px;
+}
+.ai-circular-loader {
+animation: rotate 2s linear infinite;
+height: 100%;
+transform-origin: center center;
+width: 100%;
+position: absolute;
+top: 0;
+left: 0;
+margin: auto;
+}
+.ai-path {
+stroke-dasharray: 150,200;
+stroke-dashoffset: -10;
+animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+stroke-linecap: round;
+}
+@keyframes rotate {
+100% { transform: rotate(360deg); }
+}
+@keyframes dash {
+0% {
+stroke-dasharray: 1,200;
+stroke-dashoffset: 0;
+}
+50% {
+stroke-dasharray: 89,200;
+stroke-dashoffset: -35;
+}
+100% {
+stroke-dasharray: 89,200;
+stroke-dashoffset: -124;
+}
+}
+@keyframes color {
+0% { stroke: #4f46e5; }
+40% { stroke: #818cf8; }
+66% { stroke: #6366f1; }
+80%, 90% { stroke: #4f46e5; }
+}
+.ai-particles {
+position: absolute;
+top: 50%;
+left: 50%;
+width: 1px;
+height: 1px;
+background: transparent;
+box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
+animation: particles 5s infinite linear;
+border-radius: 50%;
+}
+@keyframes particles {
+0% {
+box-shadow: 0 -10px 20px 5px #4f46e5,
+        -10px 10px 20px 5px #818cf8,
+        10px 10px 20px 5px #6366f1,
+        10px -10px 20px 5px #4f46e5;
+}
+25% {
+box-shadow: 10px -10px 20px 5px #4f46e5,
+        -10px -10px 20px 5px #818cf8,
+        -10px 10px 20px 5px #6366f1,
+        10px 10px 20px 5px #4f46e5;
+}
+50% {
+box-shadow: 10px 10px 20px 5px #4f46e5,
+        10px -10px 20px 5px #818cf8,
+        -10px -10px 20px 5px #6366f1,
+        -10px 10px 20px 5px #4f46e5;
+}
+75% {
+box-shadow: -10px 10px 20px 5px #4f46e5,
+        10px 10px 20px 5px #818cf8,
+        10px -10px 20px 5px #6366f1,
+        -10px -10px 20px 5px #4f46e5;
+}
+100% {
+box-shadow: 0 -10px 20px 5px #4f46e5,
+        -10px 10px 20px 5px #818cf8,
+        10px 10px 20px 5px #6366f1,
+        10px -10px 20px 5px #4f46e5;
+}
+}
+.ai-progress-bar {
+width: 100%;
+height: 4px;
+background-color: #4b5563;
+border-radius: 2px;
+overflow: hidden;
+}
+.ai-progress {
+width: 0%;
+height: 100%;
+background-color: #4f46e5;
+animation: progress 3s ease-in-out;
+}
+@keyframes progress {
+0% { width: 0%; }
+100% { width: 100%; }
+}
 </style>
 
 <script>
-    function updateFileName() {
-        const input = document.getElementById('image');
-        const fileName = document.getElementById('file-name');
-        if (input.files.length > 0) {
-            fileName.textContent = input.files[0].name;
-        } else {
-            fileName.textContent = 'Illustrate your ideas (optional)';
-        }
-    }
+function updateFileName() {
+const input = document.getElementById('image');
+const fileName = document.getElementById('file-name');
+if (input.files.length > 0) {
+fileName.textContent = input.files[0].name;
+} else {
+fileName.textContent = 'Illustrate your ideas (optional)';
+}
+}
+
+document.querySelector('form').addEventListener('submit', function(e) {
+if (document.getElementById('use_ai').checked) {
+e.preventDefault();
+document.getElementById('aiProcessingOverlay').classList.remove('hidden');
+document.getElementById('aiProcessingOverlay').classList.add('flex');
+// Simulate AI processing time
+setTimeout(() => {
+this.submit();
+}, 3000);
+}
+});
 </script>
 {% endblock %}

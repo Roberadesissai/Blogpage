@@ -29,29 +29,29 @@
         
         <div class="relative">
             <label for="title" class="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-gray-900">Headline Your Masterpiece</label>
-            <div class="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-4 focus-within:ring-inset focus-within:ring-purple-600 sm:max-w-md">
-                <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm"><i class="fas fa-heading"></i></span>
-                {{ form.title(class="block flex-1 border-0 bg-transparent py-1.5 pl-1 pr-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6", placeholder="Your title here...") }}
+            <div class="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-0 focus-within:border-purple-600 sm:max-w-md">
+                <span class="flex select-none items-center pl-3 pr-2 text-gray-500 sm:text-sm"><i class="fas fa-heading"></i></span>
+                {{ form.title(class="block flex-1 border-0 bg-transparent py-1.5 pl-1 pr-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 focus:border-purple-600 sm:text-sm sm:leading-6", placeholder="Your title here...") }}
             </div>
         </div>
-
+        
         <div class="relative">
             <label for="content" class="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-gray-900">Weave Your Narrative</label>
-            <div class="mt-1 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-4 focus-within:ring-inset focus-within:ring-purple-600">
-                {{ form.content(class="block w-full border-0 bg-transparent py-1.5 px-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6", rows="8", placeholder="Let your creativity flow...") }}
+            <div class="mt-1 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-0 focus-within:border-purple-600">
+                {{ form.content(class="block w-full border-0 bg-transparent py-1.5 px-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 focus:border-purple-600 sm:text-sm sm:leading-6", rows="8", placeholder="Let your creativity flow...") }}
             </div>
         </div>
-
+        
         <div class="flex items-center space-x-6">
             <div class="flex-1 relative">
                 <label for="tags" class="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-gray-900">Categorize Your Creation</label>
-                <div class="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-4 focus-within:ring-inset focus-within:ring-purple-600">
-                    <span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm"><i class="fas fa-tags"></i></span>
-                    {{ form.tags(class="block flex-1 border-0 bg-transparent py-1.5 pl-1 pr-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6", placeholder="Separate tags with commas") }}
+                <div class="mt-1 flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-0 focus-within:border-purple-600">
+                    <span class="flex select-none items-center pl-3 pr-2 text-gray-500 sm:text-sm"><i class="fas fa-tags"></i></span>
+                    {{ form.tags(class="block flex-1 border-0 bg-transparent py-1.5 pl-1 pr-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 focus:border-purple-600 sm:text-sm sm:leading-6", placeholder="Separate tags with commas") }}
                 </div>
             </div>
             <div class="flex-shrink-0 pt-2">
-                <label for="image" class="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
+                <label for="image" class="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-600 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105">
                     <i class="fas fa-cloud-upload-alt mr-2"></i>
                     <span>Upload Image</span>
                     {{ form.image(class="sr-only", onchange="updateFileName(this)") }}
@@ -59,7 +59,9 @@
                 <p id="file-name" class="mt-2 text-sm text-gray-500"></p>
             </div>
         </div>
-
+         
+        
+        
         <div id="tag-container" class="flex flex-wrap -m-1"></div>
 
         <div class="flex items-center justify-between pt-6">

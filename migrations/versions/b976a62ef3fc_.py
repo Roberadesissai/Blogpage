@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 6a7d1c07f5e7
+Revision ID: b976a62ef3fc
 Revises: 
-Create Date: 2024-09-08 20:11:59.461348
+Create Date: 2024-09-10 02:00:18.155361
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6a7d1c07f5e7'
+revision = 'b976a62ef3fc'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,16 +26,44 @@ def upgrade():
     )
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('first_name', sa.String(length=50), nullable=False),
+    sa.Column('last_name', sa.String(length=50), nullable=False),
     sa.Column('username', sa.String(length=20), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('password_hash', sa.String(length=128), nullable=False),
+    sa.Column('school', sa.String(length=100), nullable=False),
+    sa.Column('major', sa.String(length=100), nullable=False),
+    sa.Column('year', sa.String(length=20), nullable=False),
     sa.Column('bio', sa.Text(), nullable=True),
     sa.Column('location', sa.String(length=100), nullable=True),
     sa.Column('website', sa.String(length=200), nullable=True),
+    sa.Column('last_message_read_time', sa.DateTime(), nullable=True),
+    sa.Column('joined_date', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
+    op.create_table('follow',
+    sa.Column('follower_id', sa.Integer(), nullable=False),
+    sa.Column('followed_id', sa.Integer(), nullable=False),
+    sa.Column('timestamp', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['followed_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['follower_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('follower_id', 'followed_id')
+    )
+    op.create_table('message',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('sender_id', sa.Integer(), nullable=False),
+    sa.Column('recipient_id', sa.Integer(), nullable=False),
+    sa.Column('body', sa.String(length=140), nullable=False),
+    sa.Column('timestamp', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['recipient_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['sender_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    with op.batch_alter_table('message', schema=None) as batch_op:
+        batch_op.create_index(batch_op.f('ix_message_timestamp'), ['timestamp'], unique=False)
+
     op.create_table('note',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(length=100), nullable=False),
@@ -44,10 +72,18 @@ def upgrade():
     sa.Column('date_posted', sa.DateTime(), nullable=False),
     sa.Column('subject', sa.String(length=50), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('rating', sa.Float(), nullable=True),
-    sa.Column('likes', sa.Integer(), nullable=True),
+    sa.Column('ratings', sa.Text(), nullable=True),
     sa.Column('dislikes', sa.Integer(), nullable=True),
     sa.Column('image_file', sa.String(length=20), nullable=True),
+    sa.Column('views', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('notification',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=128), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('timestamp', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -58,6 +94,14 @@ def upgrade():
     sa.Column('date_posted', sa.DateTime(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('image_file', sa.String(length=20), nullable=True),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('task',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=128), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('timestamp', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -75,6 +119,27 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('note_bookmarks',
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('note_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['note_id'], ['note.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('user_id', 'note_id')
+    )
+    op.create_table('note_likes',
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('note_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['note_id'], ['note.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('user_id', 'note_id')
+    )
+    op.create_table('note_tags',
+    sa.Column('note_id', sa.Integer(), nullable=False),
+    sa.Column('tag_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['note_id'], ['note.id'], ),
+    sa.ForeignKeyConstraint(['tag_id'], ['tag.id'], ),
+    sa.PrimaryKeyConstraint('note_id', 'tag_id')
+    )
     op.create_table('post_likes',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('post_id', sa.Integer(), nullable=False),
@@ -89,6 +154,13 @@ def upgrade():
     sa.ForeignKeyConstraint(['tag_id'], ['tag.id'], ),
     sa.PrimaryKeyConstraint('post_id', 'tag_id')
     )
+    op.create_table('saved_notes',
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('note_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['note_id'], ['note.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('user_id', 'note_id')
+    )
     op.create_table('comment_likes',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('comment_id', sa.Integer(), nullable=False),
@@ -102,11 +174,22 @@ def upgrade():
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
     op.drop_table('comment_likes')
+    op.drop_table('saved_notes')
     op.drop_table('post_tags')
     op.drop_table('post_likes')
+    op.drop_table('note_tags')
+    op.drop_table('note_likes')
+    op.drop_table('note_bookmarks')
     op.drop_table('comment')
+    op.drop_table('task')
     op.drop_table('post')
+    op.drop_table('notification')
     op.drop_table('note')
+    with op.batch_alter_table('message', schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f('ix_message_timestamp'))
+
+    op.drop_table('message')
+    op.drop_table('follow')
     op.drop_table('user')
     op.drop_table('tag')
     # ### end Alembic commands ###

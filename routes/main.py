@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, abort
+from flask import Blueprint, render_template, redirect, url_for, flash, request, abort, session
 from flask_login import login_required, current_user
 from models import Post, User, Comment, Tag, Note
 from app import db
@@ -11,6 +11,7 @@ from flask import jsonify, request
 from datetime import datetime
 import secrets
 from PIL import Image
+from sqlalchemy import or_
 
 main = Blueprint('main', __name__)
 
@@ -25,9 +26,21 @@ def save_image(form_image):
 
 @main.route('/')
 def index():
+    if session.pop('just_logged_in', False):
+        return render_template('dashboard.html') + '''
+            <script>
+                showFlashMessage('Login successful. Welcome back!', 'green', 'Success');
+            </script>
+        '''
     page = request.args.get('page', 1, type=int)
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=10)
+
     return render_template('index.html', posts=posts)
+
+# @main.route('/dashboard')
+# @login_required
+# def dashboard():
+#     return render_template('dashboard.html')
 
 @main.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def post(post_id):
@@ -94,26 +107,6 @@ def create_post():
         return redirect(url_for('main.index'))
     return render_template('create_post.html', title='New Post', form=form, legend='New Post')
 
-# @main.route("/post/<int:post_id>/edit", methods=['GET', 'POST'])
-# @login_required
-# def edit_post(post_id):
-#     post = Post.query.get_or_404(post_id)
-#     if post.author != current_user:
-#         abort(403)
-#     form = PostForm()
-#     if form.validate_on_submit():
-#         post.title = form.title.data
-#         post.content = form.content.data
-#         if form.image.data:
-#             post.image_file = save_image(form.image.data)
-#         db.session.commit()
-#         flash('Your post has been updated!', 'success')
-#         return redirect(url_for('main.post', post_id=post.id))
-#     elif request.method == 'GET':
-#         form.title.data = post.title
-#         form.content.data = post.content
-#     return render_template('create_post.html', title='Edit Post', 
-#                            form=form, legend='Update Post')
 
 
 @main.route("/post/<int:post_id>/edit", methods=['GET', 'POST'])
@@ -151,35 +144,6 @@ def edit_post(post_id):
         form.tags.data = ', '.join([tag.name for tag in post.tags])
     return render_template('create_post.html', title='Edit Post', 
                            form=form, legend='Update Post')
-# @main.route('/post/<int:post_id>/update', methods=['GET', 'POST'])
-# @login_required
-# def update_post(post_id):
-#     post = Post.query.get_or_404(post_id)
-#     if post.author != current_user:
-#         abort(403)
-#     form = PostForm()
-#     if form.validate_on_submit():
-#         post.title = form.title.data
-#         post.content = form.content.data
-#         db.session.commit()
-#         flash('Your post has been updated!', 'success')
-#         return redirect(url_for('main.post', post_id=post.id))
-#     elif request.method == 'GET':
-#         form.title.data = post.title
-#         form.content.data = post.content
-#     return render_template('create_post.html', form=form, legend='Update Post')
-
-# @main.route('/post/<int:post_id>/comment', methods=['POST'])
-# @login_required
-# def add_comment(post_id):
-#     post = Post.query.get_or_404(post_id)
-#     form = CommentForm()
-#     if form.validate_on_submit():
-#         comment = Comment(content=form.content.data, post=post, author=current_user)
-#         db.session.add(comment)
-#         db.session.commit()
-#         flash('Your comment has been added!', 'success')
-#     return redirect(url_for('main.post', post_id=post.id))
 
 @main.route('/post/<int:post_id>/delete', methods=['POST'])
 @login_required
@@ -221,8 +185,129 @@ def about():
 @main.route('/notes')
 def notes():
     page = request.args.get('page', 1, type=int)
-    notes = Note.query.order_by(Note.date_posted.desc()).paginate(page=page, per_page=9)
-    return render_template('notes.html', notes=notes)
+    subject = request.args.get('subject')
+    search = request.args.get('search')
+    sort = request.args.get('sort', 'newest')
+
+    query = Note.query
+
+    # Filter by subject
+    if subject and subject != 'All':
+        query = query.filter(Note.subject == subject)
+
+    # Search functionality
+    if search:
+        search_term = f"%{search}%"
+        query = query.filter(or_(
+            Note.subject.ilike(search_term),
+            Note.title.ilike(search_term),
+            Note.summary.ilike(search_term),
+            Note.content.ilike(search_term)
+        ))
+
+    # Sorting
+    if sort == 'newest':
+        query = query.order_by(Note.date_posted.desc())
+    elif sort == 'popular':
+        query = query.order_by((Note.likes - Note.dislikes).desc())
+    elif sort == 'rated':
+        query = query.order_by(Note.rating.desc())
+    elif sort == 'oldest':
+        query = query.order_by(Note.date_posted.asc())
+    elif sort == 'unrated':
+        query = query.filter(Note.rating == 0)
+    elif sort == 'unseen':
+        query = query.filter(Note.views == 0)
+    elif sort == 'saved':
+        query = query.filter(Note.saved_by.any(id=current_user.id))
+        
+
+    notes = query.paginate(page=page, per_page=9)
+
+    subjects = [
+        'All', 'History', 'Computer Science', 'Literature', 'Arts', 'Geography',
+        'Languages', 'Philosophy', 'Biology', 'Physics', 'Psychology', 'Economics',
+        'Music', 'Drama', 'Statistics', 'Law', 'Chemistry', 'Environmental Science',
+        'Engineering', 'Medicine', 'Mathematics', 'Astronomy', 'Sociology'
+    ]
+
+    subject_icons = {
+        'All': '📚', 'History': '📜', 'Computer Science': '💻', 'Literature': '📝',
+        'Arts': '🎨', 'Geography': '🌎', 'Languages': '💬', 'Philosophy': '🏛️',
+        'Biology': '🧬', 'Physics': '⚛️', 'Psychology': '🧠', 'Economics': '💰',
+        'Music': '🎵', 'Drama': '🎭', 'Statistics': '📊', 'Law': '⚖️',
+        'Chemistry': '🔬', 'Environmental Science': '🌿',
+        'Engineering': '⚙️',  # Added Engineering
+        'Medicine': '🩺',  # Added Medicine
+        'Mathematics': '➗',  # Added Mathematics
+        'Astronomy': '🔭',  # Added Astronomy
+        'Sociology': '👥'  # Added Sociology
+    }
+
+
+    return render_template('notes.html', notes=notes, subjects=subjects, subject_icons=subject_icons,
+                           current_subject=subject, current_sort=sort, search_query=search)
+
+@main.route('/note/<int:note_id>/like', methods=['POST'])
+@login_required
+def like_note(note_id):
+    note = Note.query.get_or_404(note_id)
+    if current_user not in note.likes:
+        note.likes.append(current_user)
+    else:
+        note.likes.remove(current_user)
+    db.session.commit()
+    return jsonify(success=True)
+
+@main.route('/note/<int:note_id>/discussion')
+@login_required
+def note_discussion(note_id):
+    # Implement discussion view
+    return render_template('note_discussion.html', note_id=note_id)
+
+@main.route('/note/<int:note_id>/rate', methods=['POST'])
+@login_required
+def rate_note(note_id):
+    note = Note.query.get_or_404(note_id)
+    rating = request.json.get('rating')
+    if rating and 1 <= int(rating) <= 5:
+        # Implement rating logic
+        note.ratings.append(int(rating))
+        db.session.commit()
+        return jsonify(success=True)
+    return jsonify(success=False), 400
+
+@main.route('/note/<int:note_id>/bookmark', methods=['POST'])
+@login_required
+def bookmark_note(note_id):
+    note = Note.query.get_or_404(note_id)
+    if note in current_user.bookmarks:
+        current_user.bookmarks.remove(note)
+    else:
+        current_user.bookmarks.append(note)
+    db.session.commit()
+    return jsonify(success=True)
+
+@main.route('/note/<int:note_id>/ai-summary')
+@login_required
+def ai_summary(note_id):
+    note = Note.query.get_or_404(note_id)
+    # Implement AI summary generation here
+    summary = "This is a placeholder for the AI-generated summary."
+    return jsonify(summary=summary)
+
+@main.route('/save_note/<int:note_id>', methods=['POST'])
+@login_required
+def save_note(note_id):
+    note = Note.query.get_or_404(note_id)
+    if note in current_user.saved_notes:
+        current_user.saved_notes.remove(note)
+        db.session.commit()
+        return jsonify({'status': 'unsaved'})
+    else:
+        current_user.saved_notes.append(note)
+        db.session.commit()
+        return jsonify({'status': 'saved'})
 
 @main.route('/notes/create', methods=['GET', 'POST'])
 @login_required
@@ -309,6 +394,10 @@ def blog():
     featured_post = Post.query.order_by(Post.date_posted.desc()).first()
     
     return render_template('blog.html', posts=posts, featured_post=featured_post)
+
+@main.route('/flashcards')
+def flashcards():
+    return render_template('flashcards.html')
 
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)

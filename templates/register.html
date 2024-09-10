@@ -1,70 +1,178 @@
 {% extends "base.html" %}
 
-{% block title %}Register - Unique Blog{% endblock %}
-
+{% block title %}Register - Student Hub{% endblock %}
 {% block breadcrumbs %}
 {{ super() }}
 <span class="mx-5 text-gray-500 dark:text-gray-500">/</span>
 <span class="text-blue-600 dark:text-blue-400 flex items-center">
     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
     </svg>
     Register
 </span>
 {% endblock %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-        <div>
-            <h1 class="text-center text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 mb-2">
-                Join Us
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="w-full max-w-4xl">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 mb-2">
+                Join Student Hub
             </h1>
-            <div class="h-1 w-24 mx-auto bg-gradient-to-r from-purple-600 to-indigo-600"></div>
-            <p class="mt-2 text-center text-sm text-gray-600">
-                Register to start your adventure
+            <div class="h-1 w-32 mx-auto bg-gradient-to-r from-purple-600 to-indigo-600"></div>
+            <p class="mt-4 text-lg text-gray-600">
+                Connect, Collaborate, and Excel with Fellow Students
             </p>
         </div>
-        <form class="mt-8 space-y-6 bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4" method="POST">
-            <div class="rounded-md shadow-sm -space-y-px">
-                <div class="mb-4">
-                    <label for="username" class="block text-gray-700 text-sm font-bold mb-2">
-                        Username
-                    </label>
-                    <input id="username" name="username" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Username">
+        
+        <form class="bg-white shadow-2xl rounded-xl px-8 pt-6 pb-8 mb-4" method="POST" action="{{ url_for('auth.register') }}">
+            {{ form.hidden_tag() }}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    {{ form.first_name.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+                    {{ form.first_name(class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", placeholder="First Name") }}
                 </div>
-                <div class="mb-4">
-                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">
-                        Email
-                    </label>
-                    <input id="email" name="email" type="email" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email">
+                <div>
+                    {{ form.last_name.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+                    {{ form.last_name(class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", placeholder="Last Name") }}
                 </div>
-                <div class="mb-4">
-                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">
-                        Password
-                    </label>
-                    <input id="password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
+                <div>
+                    {{ form.username.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+                    {{ form.username(class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", placeholder="Choose a unique username") }}
                 </div>
-                <div class="mb-4">
-                    <label for="confirm_password" class="block text-gray-700 text-sm font-bold mb-2">
-                        Confirm Password
-                    </label>
-                    <input id="confirm_password" name="confirm_password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Confirm Password">
+                <div>
+                    {{ form.email.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+                    {{ form.email(class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", placeholder="student@university.edu") }}
+                </div>
+                <div>
+                    {{ form.password.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+                    {{ form.password(class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", placeholder="Create a strong password") }}
+                </div>
+                <div>
+                    {{ form.confirm_password.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+                    {{ form.confirm_password(class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", placeholder="Confirm your password") }}
+                </div>
+                <div>
+                    {{ form.school.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+                    {{ form.school(class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm", placeholder="Your University") }}
+                </div>
+                <div class="relative">
+                    {{ form.major.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+                    <input type="text" id="major-input" name="major" class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Start typing to select your major">
+                    <div id="major-suggestions" class="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg hidden mt-1 max-h-60 overflow-y-auto"></div>
+                </div>
+                <div>
+                    {{ form.year.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+                    <select id="year" name="year" class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="" disabled selected>Select your year</option>
+                        <option value="Freshman">Freshman</option>
+                        <option value="Sophomore">Sophomore</option>
+                        <option value="Junior">Junior</option>
+                        <option value="Senior">Senior</option>
+                        <option value="Graduate">Graduate</option>
+                    </select>
                 </div>
             </div>
 
-            <div>
-                <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
-                    Register
-                </button>
+            <div class="mt-8">
+                {{ form.submit(class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500") }}
             </div>
         </form>
-        <div class="text-center">
-            <a href="{{ url_for('auth.login') }}" class="font-medium text-indigo-600 hover:text-indigo-500 transition duration-300">
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('auth.login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
                 Already have an account? Sign in
             </a>
         </div>
     </div>
 </div>
+
+<div id="flash-message-container" class="fixed top-10 right-5 z-50"></div>
+
+<script>
+function showFlashMessage(message, color, title = 'Notification') {
+    const flashMessageContainer = document.getElementById('flash-message-container');
+    const flashMessage = document.createElement('div');
+    flashMessage.className = `flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800 mb-2`;
+    flashMessage.innerHTML = `
+        <div class="flex items-center justify-center w-12 bg-${color}-500">
+            <svg class="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z" />
+            </svg>
+        </div>
+        <div class="px-4 py-2 -mx-3">
+            <div class="mx-3">
+                <span class="font-semibold text-${color}-500 dark:text-${color}-400">${title}</span>
+                <p class="text-sm text-gray-600 dark:text-gray-200">${message}</p>
+            </div>
+        </div>
+    `;
+    flashMessageContainer.appendChild(flashMessage);
+
+    setTimeout(() => {
+        flashMessage.remove();
+    }, 5000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const majorInput = document.getElementById('major-input');
+    const majorSuggestions = document.getElementById('major-suggestions');
+    const majors = [
+        'Accounting', 'Aerospace Engineering', 'Anthropology', 'Architecture', 'Art History',
+        'Biochemistry', 'Biology', 'Business Administration',
+        'Chemical Engineering', 'Chemistry', 'Civil Engineering', 'Computer Engineering', 'Computer Science',
+        'Economics', 'Education', 'Electrical Engineering', 'English',
+        'Finance', 'French',
+        'Geography', 'Geology', 'German',
+        'History',
+        'Industrial Engineering', 'Information Technology', 'International Relations',
+        'Journalism',
+        'Linguistics',
+        'Marketing', 'Mathematics', 'Mechanical Engineering', 'Music',
+        'Nursing',
+        'Philosophy', 'Physics', 'Political Science', 'Psychology',
+        'Sociology', 'Spanish', 'Statistics'
+    ];
+
+    function showSuggestions(input) {
+        const inputValue = input.toLowerCase();
+        const filteredMajors = majors.filter(major => 
+            major.toLowerCase().startsWith(inputValue)
+        );
+
+        majorSuggestions.innerHTML = '';
+        filteredMajors.forEach(major => {
+            const div = document.createElement('div');
+            div.textContent = major;
+            div.className = 'p-2 hover:bg-gray-100 cursor-pointer';
+            div.onclick = function() {
+                majorInput.value = major;
+                majorSuggestions.classList.add('hidden');
+            };
+            majorSuggestions.appendChild(div);
+        });
+
+        if (filteredMajors.length > 0) {
+            majorSuggestions.classList.remove('hidden');
+        } else {
+            majorSuggestions.classList.add('hidden');
+        }
+    }
+
+    majorInput.addEventListener('input', function() {
+        showSuggestions(this.value);
+    });
+
+    majorInput.addEventListener('focus', function() {
+        if (this.value) {
+            showSuggestions(this.value);
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target !== majorInput && e.target !== majorSuggestions) {
+            majorSuggestions.classList.add('hidden');
+        }
+    });
+});
+</script>
 {% endblock %}

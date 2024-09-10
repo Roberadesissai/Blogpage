@@ -11,20 +11,14 @@
                 <h1 class="text-4xl font-extrabold mb-2">{{ note.title }}</h1>
                 <div class="flex items-center text-sm">
                     <span class="mr-4 flex items-center">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                            </path>
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                         </svg>
                         {{ note.date_posted.strftime('%B %d, %Y') }}
                     </span>
                     <span class="flex items-center">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z">
-                            </path>
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                         </svg>
                         {{ note.subject }}
                     </span>
@@ -32,7 +26,8 @@
             </div>
 
             <!-- Content -->
-            <div class="p-6 space-y-6">
+            <div class="bg-white shadow-2xl rounded-lg p-8 space-y-6 relative overflow-hidden" style="background-image: linear-gradient(#f1f5f9 1px, transparent 1px), linear-gradient(90deg, #f1f5f9 1px, transparent 1px); background-size: 20px 20px;">
+                <div class="absolute top-0 right-0 h-16 w-16 bg-yellow-200 rounded-bl-full shadow-md"></div>
                 <!-- Main Content (Filtered) -->
                 <div class="prose max-w-none" id="filteredContent">
                     {{ note.content|safe }}
@@ -41,36 +36,24 @@
                 <!-- Interactions -->
                 <div class="flex items-center justify-between mt-8 pt-4 border-t border-gray-200">
                     <div class="flex items-center space-x-4">
-                        <button id="likeButton"
-                            class="flex items-center text-gray-500 hover:text-red-500 transition-colors duration-300">
-                            <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
-                                </path>
+                        <button id="likeButton" class="flex items-center text-gray-500 hover:text-red-500 transition-colors duration-300">
+                            <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                             </svg>
                             <span id="likeCount">{{ note.likes }}</span>
                         </button>
-                        <button id="commentButton"
-                            class="flex items-center text-gray-500 hover:text-blue-500 transition-colors duration-300">
-                            <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
-                                </path>
+                        <button id="commentButton" class="flex items-center text-gray-500 hover:text-blue-500 transition-colors duration-300">
+                            <svg class="w-6 h-6 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
                             </svg>
                             <span id="commentCount">{{ note.comments.count() }}</span>
                         </button>
                     </div>
                     <div class="text-sm text-gray-500">
                         <span>
-                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                </path>
+                            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                             </svg>
                             {{ note.views }} views
                         </span>
@@ -82,146 +65,177 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const content = document.getElementById('filteredContent');
-        content.innerHTML = filterContent(content.innerHTML);
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    const content = document.getElementById('filteredContent');
+    content.innerHTML = filterContent(content.innerHTML);
+    addCopyButtons();
+    hljs.highlightAll();
+});
 
-    function filterContent(content) {
-        // Split content into lines
-        let lines = content.split('\n');
-        let filteredLines = [];
-        let listStack = [];
-        let inCodeBlock = false;
-        let sectionColor = 0;
-        const colors = ['blue', 'indigo', 'purple', 'pink'];
+function filterContent(content) {
+    let lines = content.split('\n');
+    let filteredLines = [];
+    let listStack = [];
+    let inCodeBlock = false;
+    let codeLanguage = '';
 
-        lines.forEach((line, index) => {
-            line = line.trim();
+    lines.forEach((line, index) => {
+        line = line.trim();
 
-            if (line.startsWith('```')) {
-                inCodeBlock = !inCodeBlock;
-                if (inCodeBlock) {
-                    filteredLines.push('<pre class="bg-gray-800 text-white rounded-md p-4 my-4 overflow-x-auto"><code>');
-                } else {
-                    filteredLines.push('</code></pre>');
-                }
-                return;
-            }
-
+        if (line.startsWith('```')) {
+            inCodeBlock = !inCodeBlock;
             if (inCodeBlock) {
-                filteredLines.push(line);
-                return;
-            }
-
-            // Handle bold text
-            line = line.replace(/\*\*\*\*(.*?)\*\*\*\*/g, '<strong class="font-bold text-gray-900">$1</strong>');
-
-            // Handle headings
-            if (line.startsWith('### ')) {
-                let headingText = line.replace(/^### /, '').trim();
-                filteredLines.push(`<h3 class="text-xl font-semibold text-gray-700 mt-6 mb-3 pb-1 border-b border-gray-300">${headingText}</h3>`);
-            } else if (line.match(/^\*\*[IVX]+\./)) {
-                let headingText = line.replace(/\*\*/g, '').trim();
-                sectionColor = (sectionColor + 1) % colors.length;
-                filteredLines.push(`<h2 class="text-2xl font-semibold text-${colors[sectionColor]}-700 mt-8 mb-4 pb-2 border-b-2 border-${colors[sectionColor]}-200">${headingText}</h2>`);
-            } else if (line.startsWith('* ****')) {
-                // Handle bold text with dot
-                let content = line.replace(/^\* \*\*\*\*(.*?)\*\*\*\*/, '$1');
-                filteredLines.push(`<p class="mb-2 flex items-start"><span class="inline-block w-2 h-2 rounded-full bg-gray-400 mr-2 mt-2"></span><strong class="font-bold text-gray-900">${content}</strong></p>`);
-            } else if (line.startsWith('*')) {
-                // Handle unordered list items
-                let depth = (line.match(/^\s*\*/g) || [''])[0].length;
-                let itemContent = line.replace(/^\s*\*\s*/, '');
-
-                while (listStack.length > depth) {
-                    filteredLines.push(`</ul>`);
-                    listStack.pop();
-                }
-
-                if (listStack.length < depth) {
-                    filteredLines.push(`<ul class="list-none pl-5 my-2">`);
-                    listStack.push('ul');
-                }
-
-                filteredLines.push(`<li class="mb-2 flex items-start"><span class="inline-block w-2 h-2 rounded-full bg-gray-400 mr-2 mt-2"></span>${itemContent}</li>`);
-            } else if (line.startsWith('+')) {
-                // Handle nested unordered list items
-                let depth = (line.match(/^\s*\+/g) || [''])[0].length;
-                let itemContent = line.replace(/^\s*\+\s*/, '');
-
-                while (listStack.length > depth) {
-                    filteredLines.push(`</ul>`);
-                    listStack.pop();
-                }
-
-                if (listStack.length < depth) {
-                    filteredLines.push(`<ul class="list-none pl-5 my-1">`);
-                    listStack.push('ul');
-                }
-
-                filteredLines.push(`<li class="mb-2 flex items-start"><span class="inline-block w-2 h-2 rounded-full border-2 border-gray-400 mr-2 mt-2"></span>${itemContent}</li>`);
+                codeLanguage = line.slice(3).trim() || 'plaintext';
+                filteredLines.push(`<div class="code-block-wrapper relative"><pre><code class="language-${codeLanguage}">`);
             } else {
-                // Close any open lists
-                while (listStack.length > 0) {
-                    filteredLines.push(`</ul>`);
-                    listStack.pop();
-                }
-
-                // Handle regular paragraphs
-                if (line.length > 0) {
-                    filteredLines.push(`<p class="mb-4 leading-relaxed">${line}</p>`);
-                }
+                filteredLines.push('</code></pre></div>');
             }
-        });
-
-        // Close any remaining open lists
-        while (listStack.length > 0) {
-            filteredLines.push(`</ul>`);
-            listStack.pop();
+            return;
         }
 
-        return filteredLines.join('\n');
+        if (inCodeBlock) {
+            filteredLines.push(line);
+            return;
+        }
+
+        // Handle bold text
+        line = line.replace(/\*\*\*\*(.*?)\*\*\*\*/g, '<strong class="font-bold text-indigo-700">$1</strong>');
+
+        // Handle headings
+        if (line.startsWith('### ')) {
+            let headingText = line.replace(/^### /, '').trim();
+            filteredLines.push(`<h3 class="text-xl font-semibold text-gray-700 mt-6 mb-3 pb-1 border-b border-gray-300">${headingText}</h3>`);
+        } else if (line.match(/^\*\*[IVX]+\./)) {
+            let headingText = line.replace(/\*\*/g, '').trim();
+            filteredLines.push(`<h2 class="text-2xl font-bold text-indigo-800 mt-8 mb-4 pb-2 border-b-2 border-indigo-200">${headingText}</h2>`);
+        } else if (line.startsWith('* ****')) {
+            // Handle bold text with dot
+            let content = line.replace(/^\* \*\*\*\*(.*?)\*\*\*\*/, '$1');
+            filteredLines.push(`<p class="mb-2 flex items-start"><span class="inline-block w-2 h-2 rounded-full bg-indigo-400 mr-2 mt-2"></span><strong class="font-bold text-indigo-700">${content}</strong></p>`);
+        } else if (line.startsWith('*')) {
+            // Handle unordered list items
+            let depth = (line.match(/^\s*\*/g) || [''])[0].length;
+            let itemContent = line.replace(/^\s*\*\s*/, '');
+
+            while (listStack.length > depth) {
+                filteredLines.push(`</ul>`);
+                listStack.pop();
+            }
+
+            if (listStack.length < depth) {
+                filteredLines.push(`<ul class="list-none pl-5 my-2">`);
+                listStack.push('ul');
+            }
+
+            filteredLines.push(`<li class="mb-2 flex items-start"><span class="inline-block w-2 h-2 rounded-full bg-indigo-400 mr-2 mt-2"></span>${itemContent}</li>`);
+        } else if (line.startsWith('+')) {
+            // Handle nested unordered list items
+            let depth = (line.match(/^\s*\+/g) || [''])[0].length;
+            let itemContent = line.replace(/^\s*\+\s*/, '');
+
+            while (listStack.length > depth) {
+                filteredLines.push(`</ul>`);
+                listStack.pop();
+            }
+
+            if (listStack.length < depth) {
+                filteredLines.push(`<ul class="list-none pl-5 my-1">`);
+                listStack.push('ul');
+            }
+
+            filteredLines.push(`<li class="mb-2 flex items-start"><span class="inline-block w-2 h-2 rounded-full border-2 border-indigo-400 mr-2 mt-2"></span>${itemContent}</li>`);
+        } else {
+            // Close any open lists
+            while (listStack.length > 0) {
+                filteredLines.push(`</ul>`);
+                listStack.pop();
+            }
+
+            // Handle regular paragraphs
+            if (line.length > 0) {
+                filteredLines.push(`<p class="mb-4 leading-relaxed text-gray-700">${line}</p>`);
+            }
+        }
+    });
+
+    // Close any remaining open lists
+    while (listStack.length > 0) {
+        filteredLines.push(`</ul>`);
+        listStack.pop();
     }
 
-    document.getElementById('likeButton').addEventListener('click', function () {
-        // Add like functionality here
-        console.log('Like button clicked');
-    });
+    return filteredLines.join('\n');
+}
 
-    document.getElementById('commentButton').addEventListener('click', function () {
-        // Add comment functionality here
-        console.log('Comment button clicked');
+function addCopyButtons() {
+    const codeBlocks = document.querySelectorAll('.code-block-wrapper');
+    codeBlocks.forEach((block, index) => {
+        const button = document.createElement('button');
+        button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+            </svg>
+        `;
+        button.className = 'absolute top-2 right-2 bg-indigo-500 text-white p-2 rounded-full hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-colors duration-200';
+        button.title = 'Copy code';
+        button.onclick = function() {
+            const code = block.querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                button.classList.add('bg-green-500');
+                button.classList.remove('bg-indigo-500', 'hover:bg-indigo-600');
+                setTimeout(() => {
+                    button.classList.remove('bg-green-500');
+                    button.classList.add('bg-indigo-500', 'hover:bg-indigo-600');
+                }, 2000);
+            });
+        };
+        block.appendChild(button);
     });
+}
+
+document.getElementById('likeButton').addEventListener('click', function() {
+    // Add like functionality here
+    console.log('Like button clicked');
+});
+
+document.getElementById('commentButton').addEventListener('click', function() {
+    // Add comment functionality here
+    console.log('Comment button clicked');
+});
 </script>
 
 <style>
-    .prose h1 {
-        @apply text-3xl font-bold text-gray-800 mt-8 mb-4;
-    }
-
-    .prose h2 {
-        @apply text-2xl font-semibold mt-6 mb-3;
-    }
-
-    .prose h3 {
-        @apply text-xl font-semibold text-gray-700 mt-6 mb-3 pb-1 border-b border-gray-300;
-    }
-
-    .prose ul {
-        @apply my-2;
-    }
-
-    .prose li {
-        @apply mb-2;
-    }
-
-    .prose p {
-        @apply mb-4 leading-relaxed;
-    }
-
-    .prose pre {
-        @apply bg-gray-800 text-white rounded-md p-4 my-4 overflow-x-auto;
-    }
+.prose h1 {
+    @apply text-3xl font-bold text-indigo-900 mt-8 mb-4;
+}
+.prose h2 {
+    @apply text-2xl font-bold text-indigo-800 mt-8 mb-4 pb-2 border-b-2 border-indigo-200;
+}
+.prose h3 {
+    @apply text-xl font-semibold text-gray-700 mt-6 mb-3 pb-1 border-b border-gray-300;
+}
+.prose ul {
+    @apply my-2;
+}
+.prose li {
+    @apply mb-2;
+}
+.prose p {
+    @apply mb-4 leading-relaxed text-gray-700;
+}
+.prose pre {
+    @apply bg-gray-900 text-white rounded-md p-4 my-4 overflow-x-auto;
+}
+.code-block-wrapper {
+    @apply relative;
+}
+.prose strong {
+    @apply font-bold text-indigo-700;
+}
 </style>
+
+<!-- Add highlight.js for code syntax highlighting -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
 {% endblock %}

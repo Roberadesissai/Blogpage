@@ -42,39 +42,29 @@
         </div>
 
         <div class="mb-12 flex flex-wrap justify-center gap-4">
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">📚 All</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">📜 History</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">💻 Computer Science</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">📝 Literature</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">🎨 Arts</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">🌎 Geography</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">💬 Languages</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">🏛️ Philosophy</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">🧬 Biology</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">⚛️ Physics</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">🧠 Psychology</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">💰 Economics</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">🎵 Music</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">🎭 Drama</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">📊 Statistics</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">⚖️ Law</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">🔬 Chemistry</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">🌿 Environmental Science</button>
-            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out">More...</button>
+            {% for subject in subjects %}
+            <button class="category-btn px-4 py-2 bg-white text-gray-800 rounded-full shadow-md hover:shadow-lg transition duration-300 ease-in-out {% if subject == current_subject %}bg-indigo-500 text-white{% endif %}" data-subject="{{ subject }}">
+                {{ subject_icons[subject] }} {{ subject }}
+            </button>
+            {% endfor %}
         </div>
 
         <div class="flex flex-col md:flex-row justify-between items-center mb-8">
             <div class="relative w-full md:w-1/2 mb-4 md:mb-0">
-                <input type="text" id="search" placeholder="Explore knowledge..." class="w-full pl-10 pr-4 py-2 border-2 border-purple-300 rounded-full focus:outline-none focus:border-indigo-500 transition-colors">
+                <input type="text" id="search" placeholder="Explore knowledge..." value="{{ search_query }}" class="w-full pl-10 pr-4 py-2 border-2 border-purple-300 rounded-full focus:outline-none focus:border-indigo-500 transition-colors">
                 <svg class="absolute left-3 top-2.5 h-5 w-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
             <div class="flex space-x-2">
                 <select id="sort-by" class="border-2 border-purple-300 rounded-full px-4 py-2 focus:outline-none focus:border-indigo-500 transition-colors">
-                    <option value="newest">Newest</option>
-                    <option value="popular">Popular</option>
-                    <option value="rated">Top Rated</option>
+                    <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest</option>
+                    <option value="popular" {% if current_sort == 'popular' %}selected{% endif %}>Popular</option>
+                    <option value="rated" {% if current_sort == 'rated' %}selected{% endif %}>Top Rated</option>
+                    <option value="oldest" {% if current_sort == 'oldest' %}selected{% endif %}>Oldest</option>
+                    <option value="unrated" {% if current_sort == 'unrated' %}selected{% endif %}>Unrated</option>
+                    <option value="unseen" {% if current_sort == 'unseen' %}selected{% endif %}>Unseen</option>
+                    <option value="saved" {% if current_sort == 'saved' %}selected{% endif %}>Saved</option>
                 </select>
                 <button class="tool-btn" title="Advanced Filters">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -270,9 +260,47 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const searchInput = document.getElementById('search');
+    const sortSelect = document.getElementById('sort-by');
+
+    function updateNotes() {
+        const subject = document.querySelector('.category-btn.bg-indigo-500').dataset.subject;
+        const search = searchInput.value;
+        const sort = sortSelect.value;
+        window.location.href = `{{ url_for('main.notes') }}?subject=${subject}&search=${search}&sort=${sort}`;
+    }
+
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            categoryButtons.forEach(btn => btn.classList.remove('bg-indigo-500', 'text-white'));
+            this.classList.add('bg-indigo-500', 'text-white');
+            updateNotes();
+        });
+    });
+
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            updateNotes();
+        }
+    });
+
+    sortSelect.addEventListener('change', updateNotes);
+});
 function likeNote(noteId) {
     // Implement like functionality
     console.log('Liking note:', noteId);
+}
+
+function openDiscussion(noteId) {
+    // Implement discussion functionality
+    console.log('Opening discussion for note:', noteId);
+}
+
+function rateNote(noteId) {
+    // Implement rate functionality
+    console.log('Rating note:', noteId);
 }
 
 function bookmarkNote(noteId) {
@@ -280,20 +308,19 @@ function bookmarkNote(noteId) {
     console.log('Bookmarking note:', noteId);
 }
 
-function shareNote(noteId) {
-    // Implement share functionality
-    console.log('Sharing note:', noteId);
+function commentNote(noteId) {
+    // Implement comment functionality
+    console.log('Commenting on note:', noteId);
 }
 
-function openDiscussion(noteId) {
-    // Implement open discussion functionality
-    console.log('Opening discussion for note:', noteId);
+
+function showAISummary(noteId) {
+    // Implement AI summary functionality
+    console.log('Showing AI summary for note:', noteId);
 }
 
-function reportNote(noteId) {
-    // Implement report note functionality
-    console.log('Reporting note:', noteId);
-}
+
+
 
 function toggleImage(noteId) {
     const imageElement = document.getElementById(`image-${noteId}`);

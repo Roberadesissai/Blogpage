@@ -8,10 +8,10 @@
         <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Discover Insights</h1>
     </div>
 
-    {% if posts.items %}
+    {% if posts %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {% for post in posts.items %}
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col h-[600px]">
+        {% for post in posts %}
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col h-[600px] transition duration-300">
             <div class="p-4 bg-gradient-to-r from-purple-500 to-indigo-600">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -25,7 +25,7 @@
                             <p class="text-xs text-gray-200">{{ post.date_posted.strftime('%B %d, %Y') }}</p>
                         </div>
                     </div>
-                    <button onclick="showQRCode('{{ post.author.username }}', '{{ post.author.profile_picture }}', {{ post.author.follower_count() }}, '{{ post.author.bio }}', {{ post.author.post_count() }}, '{{ post.author.joined_date.strftime('%B %d, %Y') if post.author.joined_date else 'Date Not Available' }}')" class="text-white hover:text-gray-200 transition duration-300">
+                    <button onclick="showQRCode('{{ post.author.username }}', '{{ post.author.profile_picture }}', {{ post.author.followers|length }}, '{{ post.author.bio }}')" class="text-white hover:text-gray-200 transition duration-300 transform">
                         <i class="fas fa-qrcode"></i>
                     </button>
                 </div>
@@ -34,11 +34,11 @@
                 <h2 class="text-xl font-bold text-gray-800 mb-4">{{ post.title }}</h2>
                 <div class="relative h-48 mb-4">
                     {% if post.image_file %}
-                        <img src="{{ url_for('static', filename=post.image_file) }}" alt="{{ post.title }}" class="w-full h-full object-cover rounded-lg">
+                    <img src="{{ url_for('static', filename=post.image_file) }}" alt="{{ post.title }}" class="w-full h-full object-cover rounded-lg">
                     {% else %}
-                        <div class="w-full h-full bg-gray-200 flex items-center justify-center rounded-lg">
-                            <i class="fas fa-image text-4xl text-gray-400"></i>
-                        </div>
+                    <div class="w-full h-full bg-gray-200 flex items-center justify-center rounded-lg">
+                        <i class="fas fa-image text-4xl text-gray-400"></i>
+                    </div>
                     {% endif %}
                 </div>
                 <p class="text-gray-600 line-clamp-3">{{ post.content }}</p>
@@ -55,11 +55,11 @@
                     <div class="flex items-center space-x-4">
                         <button class="flex items-center space-x-1 text-gray-500 hover:text-red-500 transition" onclick="toggleLike(this, {{ post.id }})">
                             <i class="{% if current_user in post.likes %}fas{% else %}far{% endif %} fa-heart"></i>
-                            <span class="text-sm like-count">{{ post.likes_count }}</span>
+                            <span class="text-sm like-count">{{ post.likes|length }}</span>
                         </button>
                         <button class="flex items-center space-x-1 text-gray-500 hover:text-blue-500 transition" onclick="toggleComments({{ post.id }})">
                             <i class="far fa-comment"></i>
-                            <span class="text-sm">{{ post.comments.count() }}</span>
+                            <span class="text-sm">{{ post.comment_count }}</span>
                         </button>
                     </div>
                     <div class="flex items-center space-x-2">
@@ -79,66 +79,46 @@
     </div>
     {% else %}
     <div class="bg-white shadow-lg rounded-lg overflow-hidden p-8 text-center">
-        <div class="flex justify-center mb-6">
-            <svg class="w-32 h-32 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-            </svg>
-        </div>
+        <img src="{{ url_for('static', filename='images/empty_posts.svg') }}" alt="No posts yet" class="w-64 h-64 mx-auto mb-6">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">No Insights Yet</h2>
-        <p class="text-gray-600 mb-6">Be the first to illuminate our community with your knowledge!</p>
+        <p class="text-gray-600 mb-6">Be the first to share your knowledge with the community!</p>
         <a href="{{ url_for('main.create_post') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-full text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
-            <i class="fas fa-feather-alt mr-2"></i>
             Create an Insight
         </a>
     </div>
     {% endif %}
 </div>
 
-<div id="qr-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-90 opacity-0 shadow-2xl" id="modal-content">
+<div id="qr-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 overflow-hidden">
+    <div class="bg-gradient-to-br from-purple-100 to-indigo-100 rounded-lg p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-90 opacity-0 shadow-2xl" id="modal-content">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-indigo-800">Author Profile</h2>
+            <h2 class="text-2xl font-bold text-indigo-800">Connect with Author</h2>
             <button onclick="closeQRModal()" class="text-gray-600 hover:text-gray-800 transition duration-150">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
         <div class="flex items-center space-x-4 mb-6">
-            <img id="author-image" class="h-20 w-20 rounded-full border-2 border-indigo-500" src="" alt="Author">
+            <img id="author-image" class="h-16 w-16 rounded-full border-2 border-indigo-500" src="" alt="Author">
             <div>
-                <h3 id="author-username" class="text-2xl font-semibold text-indigo-800"></h3>
-                <p id="author-join-date" class="text-sm text-gray-600"></p>
+                <h3 id="author-username" class="text-xl font-semibold text-indigo-800"></h3>
+                <p id="author-followers" class="text-sm text-gray-600"></p>
             </div>
         </div>
-        <div class="grid grid-cols-3 gap-4 mb-6 text-center">
-            <div>
-                <p id="author-posts" class="text-2xl font-bold text-indigo-600"></p>
-                <p class="text-sm text-gray-600">Posts</p>
-            </div>
-            <div>
-                <p id="author-followers" class="text-2xl font-bold text-indigo-600"></p>
-                <p class="text-sm text-gray-600">Followers</p>
-            </div>
-            <div>
-                <p id="author-following" class="text-2xl font-bold text-indigo-600">0</p>
-                <p class="text-sm text-gray-600">Following</p>
-            </div>
-        </div>
+        <div id="qrcode" class="flex justify-center items-center mb-6 bg-white p-4 rounded-lg shadow-inner"></div>
         <p id="author-bio" class="text-gray-700 text-center mb-6 italic"></p>
-        <div id="qrcode" class="flex justify-center items-center mb-6 bg-gray-100 p-4 rounded-lg shadow-inner"></div>
         <div class="grid grid-cols-2 gap-4">
-            <button onclick="followAuthor()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center justify-center">
+            <button onclick="followAuthor()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center justify-center">
                 <i class="fas fa-user-plus mr-2"></i> Follow
             </button>
-            <button onclick="messageAuthor()" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 flex items-center justify-center">
+            <button onclick="messageAuthor()" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 flex items-center justify-center">
                 <i class="fas fa-envelope mr-2"></i> Message
             </button>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 <script>
-function showQRCode(username, profilePicture, followers, bio, posts, joinDate) {
+function showQRCode(username, profilePicture, followers, bio) {
     const qrContainer = document.getElementById('qrcode');
     qrContainer.innerHTML = ''; // Clear previous QR code
     QRCode.toCanvas(qrContainer, `https://studentnexus.com/user/${username}`, {
@@ -156,13 +136,12 @@ function showQRCode(username, profilePicture, followers, bio, posts, joinDate) {
     // Update author information
     document.getElementById('author-image').src = profilePicture || "{{ url_for('static', filename='images/default_profile.jpg') }}";
     document.getElementById('author-username').textContent = '@' + username;
-    document.getElementById('author-followers').textContent = followers;
-    document.getElementById('author-posts').textContent = posts;
+    document.getElementById('author-followers').textContent = followers + ' followers';
     document.getElementById('author-bio').textContent = bio || 'No bio available';
-    document.getElementById('author-join-date').textContent = 'Joined ' + joinDate;
 
     document.getElementById('qr-modal').classList.remove('hidden');
     document.getElementById('qr-modal').classList.add('flex');
+    document.body.style.overflow = 'hidden'; // Disable background scrolling
     setTimeout(() => {
         document.getElementById('modal-content').classList.remove('scale-90', 'opacity-0');
         document.getElementById('modal-content').classList.add('scale-100', 'opacity-100');
@@ -175,6 +154,7 @@ function closeQRModal() {
     setTimeout(() => {
         document.getElementById('qr-modal').classList.add('hidden');
         document.getElementById('qr-modal').classList.remove('flex');
+        document.body.style.overflow = 'auto'; // Re-enable background scrolling
     }, 300);
 }
 

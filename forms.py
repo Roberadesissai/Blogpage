@@ -3,7 +3,10 @@ from wtforms import StringField, TextAreaField, SubmitField, PasswordField, URLF
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length, Email, Optional, URL
-from wtforms.fields import SelectField
+from wtforms.fields import SelectField, IntegerField
+from wtforms.validators import ValidationError
+from models.user import User
+
 
 
 
@@ -23,7 +26,40 @@ class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    first_name = StringField('First Name', validators=[DataRequired()])
+    last_name = StringField('Last Name', validators=[DataRequired()])
+    school = StringField('School', validators=[DataRequired()])
+    major = StringField('Major', validators=[DataRequired()])
+    year = SelectField('Year', choices=[
+        ('Freshman', 'Freshman'),
+        ('Sophomore', 'Sophomore'),
+        ('Junior', 'Junior'),
+        ('Senior', 'Senior'),
+        ('Graduate', 'Graduate')
+    ], validators=[DataRequired()])
     submit = SubmitField('Sign Up')
+
+    # def validate_username(self, username):
+    #     user = User.query.filter_by(username=username.data).first()
+    #     if user:
+    #         raise ValidationError('That username is taken. Please choose a different one.')
+
+    # def validate_email(self, email):
+    #     user = User.query.filter_by(email=email.data).first()
+    #     if user:
+    #         raise ValidationError('That email is taken. Please choose a different one.')
+
+    # def validate_username(self, username):
+    #     user = User.query.filter_by(username=username.data).first()
+    #     if user:
+    #         raise ValidationError('That username is taken. Please choose a different one.')
+
+    # def validate_email(self, email):
+    #     user = User.query.filter_by(email=email.data).first()
+    #     if user:
+    #         raise ValidationError('That email is taken. Please choose a different one.')
+    #     if not email.data.endswith('.edu'):
+    #         raise ValidationError('Please use a valid .edu email address.')
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
