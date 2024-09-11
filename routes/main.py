@@ -32,21 +32,17 @@ def save_image(form_image):
 
 @main.route('/')
 def index():
-    if session.pop('just_logged_in', False):
-        return render_template('dashboard.html') + '''
-            <script>
-                showFlashMessage('Login successful. Welcome back!', 'green', 'Success');
-            </script>
-        '''
+    return render_template('index.html')
+
+@main.route('/dashboard')
+@login_required
+def dashboard():
+    if 'just_logged_in' in session:
+        session.pop('just_logged_in')
     page = request.args.get('page', 1, type=int)
     posts = Post.query.order_by(Post.date_posted.desc()).paginate(page=page, per_page=10)
+    return render_template('dashboard.html', posts=posts)
 
-    return render_template('index.html', posts=posts)
-
-# @main.route('/dashboard')
-# @login_required
-# def dashboard():
-#     return render_template('dashboard.html')
 
 @main.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def post(post_id):
@@ -60,7 +56,6 @@ def post(post_id):
         )
         db.session.add(comment)
         db.session.commit()
-        flash('Your comment has been added!', 'success')
         return redirect(url_for('main.post', post_id=post_id))
     return render_template('post.html', title=post.title, post=post, comment_form=comment_form)
 
@@ -94,7 +89,6 @@ def add_comment(post_id):
         )
         db.session.add(comment)
         db.session.commit()
-        flash("Your comment has been added!", "success")
     return redirect(url_for("main.post", post_id=post_id))
 
 
@@ -112,7 +106,6 @@ def add_note_comment(note_id):
         )
         db.session.add(comment)
         db.session.commit()
-        flash("Your comment has been added!", "success")
     return redirect(url_for("main.note", note_id=note_id))
 
 
@@ -134,7 +127,6 @@ def create_post():
             post.tags.append(tag)
         db.session.add(post)
         db.session.commit()
-        flash('Your post has been created!', 'success')
         return redirect(url_for('main.index'))
     return render_template('create_post.html', title='New Post', form=form, legend='New Post')
 
@@ -166,7 +158,6 @@ def edit_post(post_id):
             post.tags.append(tag)
 
         db.session.commit()
-        flash('Your post has been updated!', 'success')
         return redirect(url_for('main.post', post_id=post.id))
     elif request.method == 'GET':
         form.title.data = post.title
@@ -183,7 +174,6 @@ def delete_post(post_id):
         abort(403)
     db.session.delete(post)
     db.session.commit()
-    flash('Your post has been deleted!', 'success')
     return redirect(url_for('main.index'))
 
 @main.route('/user/<string:username>')
@@ -276,7 +266,6 @@ def notes():
     return render_template('notes.html', notes=notes, subjects=subjects, subject_icons=subject_icons,
                            current_subject=subject, current_sort=sort, search_query=search)
 
-
 @main.route("/chatcanva", methods=["GET", "POST"])
 def chatcanva():
     if "chat_history" not in session:
@@ -286,37 +275,25 @@ def chatcanva():
         user_message = request.form.get("message")
         if user_message:
             try:
-                # Get AI response
                 ai_response = get_ai_response(user_message)
 
-                # Add user message and AI response to chat history
-                session["chat_history"].append(
-                    {"role": "user", "content": user_message}
-                )
-                session["chat_history"].append(
-                    {"role": "assistant", "content": ai_response}
-                )
+                session["chat_history"].append({"role": "user", "content": user_message})
+                session["chat_history"].append({"role": "assistant", "content": ai_response})
 
                 session.modified = True
 
                 return jsonify({"response": ai_response})
             except Exception as e:
                 print(f"Error in AI response generation: {str(e)}")
-                return (
-                    jsonify(
-                        {"error": "An error occurred while processing your request."}
-                    ),
-                    500,
-                )
+                return jsonify({"error": "An error occurred while processing your request."}), 500
         else:
             return jsonify({"error": "No message provided"}), 400
 
-    # For GET requests, render the template
     return render_template(
         "chatcanva.html",
         chat_history=session.get("chat_history", []),
-        username="Student",  # Replace with actual username logic
-        date=date,
+        current_user="Student",  # Replace with actual username logic
+        date=date.today()
     )
 
 
@@ -405,7 +382,6 @@ def create_note():
 
         db.session.add(new_note)
         db.session.commit()
-        flash('Your note has been created!', 'success')
         return redirect(url_for('main.notes'))
 
     return render_template('create_note.html', form=form)
@@ -428,7 +404,6 @@ def edit_note(note_id):
         note.content = form.content.data
         note.subject = form.subject.data
         db.session.commit()
-        flash('Your note has been updated!', 'success')
         return redirect(url_for('main.view_note', note_id=note.id))
     elif request.method == 'GET':
         form.title.data = note.title
@@ -449,8 +424,7 @@ def delete_note(note_id):
     # Delete the note
     db.session.delete(note)
     db.session.commit()
-    
-    flash('Your note has been deleted.', 'success')
+
     return redirect(url_for('main.notes'))
 
 @main.route('/study_groups')
@@ -502,7 +476,7 @@ def edit_profile():
                 picture_file = save_picture(form.profile_picture.data)
                 current_user.profile_picture = picture_file
             except Exception as e:
-                flash(f'Error updating profile picture: {str(e)}', 'danger')
+                print(f"Error saving profile picture: {str(e)}")
         
         current_user.username = form.username.data
         current_user.email = form.email.data
@@ -511,7 +485,6 @@ def edit_profile():
         current_user.website = form.website.data
         
         db.session.commit()
-        flash('Your profile has been updated!', 'success')
         return redirect(url_for('main.profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username

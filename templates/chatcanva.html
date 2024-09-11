@@ -128,22 +128,26 @@
             </div>
 
             <div id="chat-container" class="space-y-4 mb-4 h-[500px] overflow-y-auto pr-4">
-                {% for message in chat_history %}
-                <div class="flex {% if message.role == 'user' %}justify-end{% endif %}">
-                    <div class="chat-bubble max-w-xs lg:max-w-md px-2 py-1">
-                        <p
-                            class="handwriting text-xl {% if message.role == 'user' %}text-blue-800{% else %}text-red-800{% endif %}">
-                            {% if message.role == 'user' %}
-                            <i class="fas fa-user text-blue-600 mr-2"></i>
-                            {% else %}
-                            <i class="fas fa-robot text-red-600 mr-2"></i>
-                            {% endif %}
-                            {{ message.content }}
-                        </p>
-                    </div>
-                </div>
-                {% endfor %}
+                {% if chat_history %}
+                    {% for message in chat_history %}
+                        <div class="flex {% if message.role == 'user' %}justify-end{% endif %}">
+                            <div class="chat-bubble max-w-xs lg:max-w-md px-2 py-1">
+                                <p class="handwriting text-xl {% if message.role == 'user' %}text-blue-800{% else %}text-red-800{% endif %}">
+                                    {% if message.role == 'user' %}
+                                        <i class="fas fa-user text-blue-600 mr-2"></i>
+                                    {% else %}
+                                        <i class="fas fa-robot text-red-600 mr-2"></i>
+                                    {% endif %}
+                                    {{ message.content }}
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="handwriting text-lg text-gray-500">No messages yet. Start the conversation!</p>
+                {% endif %}
             </div>
+            
 
             <div id="typing-indicator" class="handwriting text-lg text-gray-600 mb-2 hidden">
                 <i class="fas fa-pen-fancy animate-pulse mr-2"></i> AI is crafting a response...
@@ -173,45 +177,41 @@
 </div>
 
 <script>
-    document.getElementById('chat-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const userInput = document.getElementById('user-input');
-        const message = userInput.value.trim();
-        if (message) {
-            appendMessage('user', message);
-            userInput.value = '';
-            document.getElementById('typing-indicator').classList.remove('hidden');
+   document.getElementById('chat-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const userInput = document.getElementById('user-input');
+    const message = userInput.value.trim();
+    if (message) {
+        appendMessage('user', message);
+        userInput.value = '';
+        document.getElementById('typing-indicator').classList.remove('hidden');
 
-            fetch('/chatcanva', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    'message': message
-                })
+        fetch('/chatcanva', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                'message': message
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    document.getElementById('typing-indicator').classList.add('hidden');
-                    if (data.error) {
-                        appendMessage('assistant', 'Sorry, an error occurred: ' + data.error);
-                    } else {
-                        appendMessage('assistant', data.response);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('typing-indicator').classList.add('hidden');
-                    appendMessage('assistant', 'Sorry, an error occurred while processing your request.');
-                });
-        }
-    });
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('typing-indicator').classList.add('hidden');
+            if (data.error) {
+                appendMessage('assistant', 'Sorry, an error occurred: ' + data.error);
+            } else {
+                appendMessage('assistant', data.response);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('typing-indicator').classList.add('hidden');
+            appendMessage('assistant', 'Sorry, an error occurred while processing your request.');
+        });
+    }
+});
+
 
     function appendMessage(role, content) {
         const chatContainer = document.getElementById('chat-container');

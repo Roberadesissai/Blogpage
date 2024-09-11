@@ -19,7 +19,7 @@ def get_ai_response(user_message):
             "content": user_message,
         },
     ]
-
+    
     client = OpenAI(api_key=YOUR_API_KEY, base_url="https://api.perplexity.ai")
 
     try:

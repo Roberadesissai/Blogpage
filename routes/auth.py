@@ -22,7 +22,7 @@ auth = Blueprint('auth', __name__)
 def login():
     if current_user.is_authenticated:
         session['just_logged_in'] = True
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.dashboard'))
     
     if request.method == 'POST':
         username = request.form.get('username')
@@ -63,7 +63,7 @@ def login():
         login_user(user)
         next_page = request.args.get('next')
         if not next_page or urlparse(next_page).netloc != '':
-            next_page = url_for('main.index')
+            next_page = url_for('main.dashboard')
         return redirect(next_page)
     
     return render_template('login.html')
@@ -72,7 +72,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.dashboard'))
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():

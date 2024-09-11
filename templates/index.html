@@ -1,257 +1,226 @@
 {% extends "base.html" %}
 
-{% block title %}Home - Student Nexus{% endblock %}
+{% block title %}Knowledge Nexus - Revolutionize Your Learning{% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Discover Insights</h1>
-    </div>
-
-    {% if posts.items %}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {% for post in posts.items %}
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden flex flex-col h-[600px]">
-            <div class="p-4 bg-gradient-to-r from-purple-500 to-indigo-600">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        {% if post.author.profile_picture %}
-                        <img class="h-10 w-10 rounded-full border-2 border-white" src="{{ post.author.profile_picture }}" alt="{{ post.author.username }}">
-                        {% else %}
-                        <img class="h-10 w-10 rounded-full border-2 border-white" src="{{ url_for('static', filename='images/default_profile.jpg') }}" alt="{{ post.author.username }}">
-                        {% endif %}
-                        <div>
-                            <p class="text-sm font-semibold text-white">@{{ post.author.username }}</p>
-                            <p class="text-xs text-gray-200">{{ post.date_posted.strftime('%B %d, %Y') }}</p>
-                        </div>
-                    </div>
-                    <button onclick="showQRCode('{{ post.author.username }}', '{{ post.author.profile_picture }}', {{ post.author.follower_count() }}, '{{ post.author.bio }}', {{ post.author.post_count() }}, '{{ post.author.joined_date.strftime('%B %d, %Y') if post.author.joined_date else 'Date Not Available' }}')" class="text-white hover:text-gray-200 transition duration-300">
-                        <i class="fas fa-qrcode"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="p-6 flex-grow overflow-hidden">
-                <h2 class="text-xl font-bold text-gray-800 mb-4">{{ post.title }}</h2>
-                <div class="relative h-48 mb-4">
-                    {% if post.image_file %}
-                        <img src="{{ url_for('static', filename=post.image_file) }}" alt="{{ post.title }}" class="w-full h-full object-cover rounded-lg">
-                    {% else %}
-                        <div class="w-full h-full bg-gray-200 flex items-center justify-center rounded-lg">
-                            <i class="fas fa-image text-4xl text-gray-400"></i>
-                        </div>
-                    {% endif %}
-                </div>
-                <p class="text-gray-600 line-clamp-3">{{ post.content }}</p>
-                {% if post.tags %}
-                <div class="mt-4 flex flex-wrap">
-                    {% for tag in post.tags %}
-                    <span class="bg-gradient-to-r from-purple-200 to-indigo-200 text-indigo-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">#{{ tag.name }}</span>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-            <div class="bg-gray-100 px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
-                        <button id="like-button-{{ post.id }}" class="flex items-center space-x-1 text-gray-500 hover:text-red-500 transition"
-                            onclick="toggleLike(this, {{ post.id }})">
-                            <i class="{% if current_user in post.likes %}fas{% else %}far{% endif %} fa-heart"></i>
-                            <span class="text-sm like-count">{{ post.likes_count }}</span>
-                        </button>
-                        <button class="flex items-center space-x-1 text-gray-500 hover:text-blue-500 transition" onclick="toggleComments({{ post.id }})">
-                            <i class="far fa-comment"></i>
-                            <span class="text-sm">{{ post.comments.count() }}</span>
-                        </button>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        {% if current_user == post.author %}
-                        <a href="{{ url_for('main.edit_post', post_id=post.id) }}" class="text-gray-500 hover:text-indigo-600 transition duration-300">
-                            <i class="fas fa-feather text-xl"></i>
-                        </a>
-                        {% endif %}
-                        <a href="{{ url_for('main.post', post_id=post.id) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
-                            Explore More
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden p-8 text-center">
-        <div class="flex justify-center mb-6">
-            <svg class="w-32 h-32 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+<div class="min-h-screen overflow-x-hidden -mt-24 -mx-4 sm:-mx-6 lg:-mx-8"> 
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-indigo-900">
+        <div class="absolute inset-0 z-0">
+            <svg class="w-full h-full" viewBox="0 0 1440 800" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="hero-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <path fill="url(#hero-gradient)" d="M0,128L48,138.7C96,149,192,171,288,186.7C384,203,480,213,576,186.7C672,160,768,96,864,101.3C960,107,1056,181,1152,197.3C1248,213,1344,171,1392,149.3L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z">
+                    <animate attributeName="d" dur="10s" repeatCount="indefinite" values="M0,128L48,138.7C96,149,192,171,288,186.7C384,203,480,213,576,186.7C672,160,768,96,864,101.3C960,107,1056,181,1152,197.3C1248,213,1344,171,1392,149.3L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z;
+                    M0,64L48,74.7C96,85,192,107,288,138.7C384,171,480,213,576,213.3C672,213,768,171,864,149.3C960,128,1056,128,1152,122.7C1248,117,1344,107,1392,101.3L1440,96L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z;
+                    M0,128L48,138.7C96,149,192,171,288,186.7C384,203,480,213,576,186.7C672,160,768,96,864,101.3C960,107,1056,181,1152,197.3C1248,213,1344,171,1392,149.3L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" />
+                </path>
             </svg>
         </div>
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">No Insights Yet</h2>
-        <p class="text-gray-600 mb-6">Be the first to illuminate our community with your knowledge!</p>
-        <a href="{{ url_for('main.create_post') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-full text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
-            <i class="fas fa-feather-alt mr-2"></i>
-            Create an Insight
+        <div class="container mx-auto px-6 relative z-10 text-white">
+            <div class="text-center mb-16">
+                <h1 class="text-5xl sm:text-7xl font-extrabold leading-tight mb-6 animate-pulse">
+                    Unlock Your Learning Potential
+                </h1>
+                <p class="text-xl sm:text-2xl mb-12 animate-fade-in">Revolutionize your study habits with AI-powered insights and collaborative learning</p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="{{ url_for('auth.register') }}" class="bg-yellow-400 text-indigo-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-300 transition duration-300 transform hover:scale-105">
+                        Start Learning Now
+                    </a>
+                    <a href="#features" class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-white hover:text-indigo-900 transition duration-300 transform hover:scale-105">
+                        Explore Features
+                    </a>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="bg-white bg-opacity-20 rounded-lg p-6 backdrop-filter backdrop-blur-lg">
+                    <h3 class="text-2xl font-bold mb-2">10,000+</h3>
+                    <p>Active Learners</p>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-lg p-6 backdrop-filter backdrop-blur-lg">
+                    <h3 class="text-2xl font-bold mb-2">500+</h3>
+                    <p>Courses Available</p>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-lg p-6 backdrop-filter backdrop-blur-lg">
+                    <h3 class="text-2xl font-bold mb-2">95%</h3>
+                    <p>Success Rate</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <svg class="w-full h-full" viewBox="0 0 1440 800" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#4F46E5" fill-opacity="0.1" d="M0,192L48,208C96,224,192,256,288,261.3C384,267,480,245,576,218.7C672,192,768,160,864,170.7C960,181,1056,235,1152,245.3C1248,256,1344,224,1392,208L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+        <div class="container mx-auto px-6 relative z-10">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Empower Your Learning Journey</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300">
+                    <div class="text-4xl mb-4 text-indigo-600">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">AI-Powered Insights</h3>
+                    <p class="text-gray-600">Get personalized study recommendations and track your progress with advanced AI algorithms.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300">
+                    <div class="text-4xl mb-4 text-purple-600">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Collaborative Learning</h3>
+                    <p class="text-gray-600">Connect with peers, form study groups, and share knowledge in a supportive community.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300">
+                    <div class="text-4xl mb-4 text-pink-600">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Gamified Experience</h3>
+                    <p class="text-gray-600">Earn points, badges, and rewards as you achieve your learning goals and milestones.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Path Section -->
+    <section class="py-20 bg-indigo-100 relative overflow-hidden">
+
+        <div class="absolute inset-0 z-0">
+            <svg class="w-full h-full" viewBox="0 0 1440 800" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#4F46E5" fill-opacity="0.1" d="M0,256L48,240C96,224,192,192,288,181.3C384,171,480,181,576,192C672,203,768,213,864,192C960,171,1056,117,1152,117.3C1248,117,1344,171,1392,197.3L1440,224L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+            </svg>
+        </div>
+        <div class="container mx-auto px-6 relative z-10">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Your Path to Success</h2>
+            <div class="relative">
+                <div class="absolute h-full w-1 bg-indigo-300 left-1/2 transform -translate-x-1/2"></div>
+                <div class="space-y-12">
+                    <div class="flex flex-col md:flex-row items-center justify-end md:justify-between roadmap-item">
+                        <div class="w-full md:w-5/12 order-1 md:order-1">
+                            <div class="bg-white p-6 rounded-lg shadow-lg transform rotate-3 hover:rotate-0 transition duration-300">
+                                <h3 class="text-xl font-bold mb-2">1. Sign Up and Explore</h3>
+                                <p>Create your account and discover a world of learning opportunities tailored to your interests.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/4 flex items-center justify-center">
+                            <div class="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user-plus text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row items-center justify-start md:justify-between roadmap-item">
+                        <div class="w-full md:w-5/12 order-1 md:order-2">
+                            <div class="bg-white p-6 rounded-lg shadow-lg transform -rotate-3 hover:rotate-0 transition duration-300">
+                                <h3 class="text-xl font-bold mb-2">2. Connect and Collaborate</h3>
+                                <p>Join study groups, participate in discussions, and share knowledge with peers from around the world.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/4 flex items-center justify-center">
+                            <div class="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-comments text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row items-center justify-end md:justify-between roadmap-item">
+                        <div class="w-full md:w-5/12 order-1 md:order-1">
+                            <div class="bg-white p-6 rounded-lg shadow-lg transform rotate-3 hover:rotate-0 transition duration-300">
+                                <h3 class="text-xl font-bold mb-2">3. Learn and Grow</h3>
+                                <p>Access AI-powered study materials, track your progress, and receive personalized recommendations.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/4 flex items-center justify-center">
+                            <div class="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-graduation-cap text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:flex-row items-center justify-start md:justify-between roadmap-item">
+                        <div class="w-full md:w-5/12 order-1 md:order-2">
+                            <div class="bg-white p-6 rounded-lg shadow-lg transform -rotate-3 hover:rotate-0 transition duration-300">
+                                <h3 class="text-xl font-bold mb-2">4. Achieve Your Goals</h3>
+                                <p>Earn rewards, improve your grades, and reach new heights in your academic journey.</p>
+                            </div>
+                        </div>
+                        <div class="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/4 flex items-center justify-center">
+                            <div class="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-flag-checkered text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!-- Testimonials Section -->
+<section class="py-20 relative overflow-hidden">
+    <div class="absolute inset-0 z-0">
+        <svg class="w-full h-full" viewBox="0 0 1440 800" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#4F46E5" fill-opacity="0.1" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,213.3C672,224,768,224,864,213.3C960,203,1056,181,1152,181.3C1248,181,1344,203,1392,213.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+    <div class="container mx-auto px-6 relative z-10">
+        <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">What Our Students Say</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300">
+                <p class="text-gray-600 mb-4">"Knowledge Nexus has transformed my study habits. The AI recommendations are spot-on, and I've seen a significant improvement in my grades!"</p>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-indigo-200 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-xl font-bold text-indigo-600">SJ</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">Sarah J.</h4>
+                        <p class="text-sm text-gray-500">Computer Science Major</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300">
+                <p class="text-gray-600 mb-4">"The collaborative features have helped me connect with study partners worldwide. It's amazing how much you can learn from peers across different cultures!"</p>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-xl font-bold text-purple-600">MT</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">Mike T.</h4>
+                        <p class="text-sm text-gray-500">Biology Student</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition duration-300">
+                <p class="text-gray-600 mb-4">"Gamification makes studying fun! I'm motivated to learn more and earn rewards. It's like turning education into an exciting game!"</p>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-pink-200 rounded-full flex items-center justify-center mr-4">
+                        <span class="text-xl font-bold text-pink-600">ER</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">Emily R.</h4>
+                        <p class="text-sm text-gray-500">History Enthusiast</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-indigo-600 relative overflow-hidden">
+    <div class="absolute inset-0 z-0 opacity-30">
+        <svg class="w-full h-full" viewBox="0 0 1440 800" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#ffffff" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,250.7C1248,256,1344,288,1392,304L1440,320L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        </svg>
+    </div>
+    <div class="container mx-auto px-6 relative z-10 text-center">
+        <h2 class="text-4xl font-bold text-white mb-8">Ready to Transform Your Learning Experience?</h2>
+        <a href="{{ url_for('auth.register') }}" class="bg-yellow-400 text-indigo-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-300 transition duration-300 inline-block transform hover:scale-105">
+            Join Knowledge Nexus Today
         </a>
     </div>
-    {% endif %}
+</section>
 </div>
-
-<div id="qr-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4 transform transition-all duration-300 scale-90 opacity-0 shadow-2xl" id="modal-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-indigo-800">Author Profile</h2>
-            <button onclick="closeQRModal()" class="text-gray-600 hover:text-gray-800 transition duration-150">
-                <i class="fas fa-times text-xl"></i>
-            </button>
-        </div>
-        <div class="flex items-center space-x-4 mb-6">
-            <img id="author-image" class="h-20 w-20 rounded-full border-2 border-indigo-500" src="" alt="Author">
-            <div>
-                <h3 id="author-username" class="text-2xl font-semibold text-indigo-800"></h3>
-                <p id="author-join-date" class="text-sm text-gray-600"></p>
-            </div>
-        </div>
-        <div class="grid grid-cols-3 gap-4 mb-6 text-center">
-            <div>
-                <p id="author-posts" class="text-2xl font-bold text-indigo-600"></p>
-                <p class="text-sm text-gray-600">Posts</p>
-            </div>
-            <div>
-                <p id="author-followers" class="text-2xl font-bold text-indigo-600"></p>
-                <p class="text-sm text-gray-600">Followers</p>
-            </div>
-            <div>
-                <p id="author-following" class="text-2xl font-bold text-indigo-600">0</p>
-                <p class="text-sm text-gray-600">Following</p>
-            </div>
-        </div>
-        <p id="author-bio" class="text-gray-700 text-center mb-6 italic"></p>
-        <div id="qrcode" class="flex justify-center items-center mb-6 bg-gray-100 p-4 rounded-lg shadow-inner"></div>
-        <div class="grid grid-cols-2 gap-4">
-            <button onclick="followAuthor()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center justify-center">
-                <i class="fas fa-user-plus mr-2"></i> Follow
-            </button>
-            <button onclick="messageAuthor()" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 flex items-center justify-center">
-                <i class="fas fa-envelope mr-2"></i> Message
-            </button>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-<script>
-    function likePost(postId) {
-        fetch(`/post/${postId}/like`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrf_token')  // Make sure to include CSRF token if required
-            },
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Update the UI to reflect the new like status
-                    const likeButton = document.querySelector(`#like-button-${postId}`);
-                    const likeCount = document.querySelector(`#like-count-${postId}`);
-                    likeButton.classList.toggle('liked', data.liked);
-                    likeCount.textContent = data.likes;
-                } else {
-                    console.error('Error liking post:', data.error);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-function showQRCode(username, profilePicture, followers, bio, posts, joinDate) {
-    const qrContainer = document.getElementById('qrcode');
-    qrContainer.innerHTML = ''; // Clear previous QR code
-    QRCode.toCanvas(qrContainer, `https://studentnexus.com/user/${username}`, {
-        width: 200,
-        margin: 1,
-        color: {
-            dark: '#4F46E5',
-            light: '#ffffff'
-        }
-    }, function (error) {
-        if (error) console.error(error);
-        console.log('QR code generated!');
-    });
-
-    // Update author information
-    document.getElementById('author-image').src = profilePicture || "{{ url_for('static', filename='images/default_profile.jpg') }}";
-    document.getElementById('author-username').textContent = '@' + username;
-    document.getElementById('author-followers').textContent = followers;
-    document.getElementById('author-posts').textContent = posts;
-    document.getElementById('author-bio').textContent = bio || 'No bio available';
-    document.getElementById('author-join-date').textContent = 'Joined ' + joinDate;
-
-    document.getElementById('qr-modal').classList.remove('hidden');
-    document.getElementById('qr-modal').classList.add('flex');
-    setTimeout(() => {
-        document.getElementById('modal-content').classList.remove('scale-90', 'opacity-0');
-        document.getElementById('modal-content').classList.add('scale-100', 'opacity-100');
-    }, 10);
-}
-
-function closeQRModal() {
-    document.getElementById('modal-content').classList.remove('scale-100', 'opacity-100');
-    document.getElementById('modal-content').classList.add('scale-90', 'opacity-0');
-    setTimeout(() => {
-        document.getElementById('qr-modal').classList.add('hidden');
-        document.getElementById('qr-modal').classList.remove('flex');
-    }, 300);
-}
-
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-
- function toggleLike(button, postId) {
-        const csrfToken = document.querySelector('input[name="csrf_token"]').value; // Ensure the CSRF token is correctly fetched
-
-        fetch(`/post/${postId}/like`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,  // Ensure the CSRF token is included in the request
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    const icon = button.querySelector('i');
-                    const likeCount = button.querySelector('.like-count');
-                    icon.classList.toggle('fas');
-                    icon.classList.toggle('far');
-                    likeCount.textContent = data.likes_count;
-                    button.classList.toggle('text-red-500', data.liked);
-                } else {
-                    console.error('Error liking post:', data.error);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-
-function toggleComments(postId) {
-    window.location.href = `/post/${postId}#comments`;
-}
-
-function followAuthor() {
-    // Implement follow functionality
-    alert('You are now following this author!');
-}
-
-function messageAuthor() {
-    // Implement message functionality
-    alert('Opening message interface...');
-}
-</script>
 {% endblock %}
