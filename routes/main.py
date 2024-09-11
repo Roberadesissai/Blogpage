@@ -174,7 +174,7 @@ def delete_post(post_id):
         abort(403)
     db.session.delete(post)
     db.session.commit()
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.dashboard'))
 
 @main.route('/user/<string:username>')
 def user_posts(username):
