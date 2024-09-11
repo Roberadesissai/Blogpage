@@ -3,7 +3,7 @@
 {% block title %}Knowledge Nexus - Revolutionize Your Learning{% endblock %}
 
 {% block content %}
-<div class="min-h-screen overflow-x-hidden -mt-24 -mx-4 sm:-mx-6 lg:-mx-8"> 
+<div class="min-h-screen overflow-x-hidden -mt-24 -mx-4 sm:-mx-6 lg:-mx-8">
     <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-indigo-900">
         <div class="absolute inset-0 z-0">
@@ -28,7 +28,7 @@
                 </h1>
                 <p class="text-xl sm:text-2xl mb-12 animate-fade-in">Revolutionize your study habits with AI-powered insights and collaborative learning</p>
                 <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="{{ url_for('auth.register') }}" class="bg-yellow-400 text-indigo-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-300 transition duration-300 transform hover:scale-105">
+                    <a href="{{ url_for('auth.login') }}" class="bg-yellow-400 text-indigo-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-300 transition duration-300 transform hover:scale-105">
                         Start Learning Now
                     </a>
                     <a href="#features" class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full text-lg hover:bg-white hover:text-indigo-900 transition duration-300 transform hover:scale-105">
@@ -90,7 +90,6 @@
 
     <!-- Learning Path Section -->
     <section class="py-20 bg-indigo-100 relative overflow-hidden">
-
         <div class="absolute inset-0 z-0">
             <svg class="w-full h-full" viewBox="0 0 1440 800" xmlns="http://www.w3.org/2000/svg">
                 <path fill="#4F46E5" fill-opacity="0.1" d="M0,256L48,240C96,224,192,192,288,181.3C384,171,480,181,576,192C672,203,768,213,864,192C960,171,1056,117,1152,117.3C1248,117,1344,171,1392,197.3L1440,224L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
@@ -217,10 +216,11 @@
     </div>
     <div class="container mx-auto px-6 relative z-10 text-center">
         <h2 class="text-4xl font-bold text-white mb-8">Ready to Transform Your Learning Experience?</h2>
-        <a href="{{ url_for('auth.register') }}" class="bg-yellow-400 text-indigo-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-300 transition duration-300 inline-block transform hover:scale-105">
+        <a href="{{ url_for('auth.login') }}" class="bg-yellow-400 text-indigo-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-300 transition duration-300 inline-block transform hover:scale-105">
             Join Knowledge Nexus Today
         </a>
     </div>
 </section>
-</div>
-{% endblock %}
+
+<!-- Footer Section -->
+ {% endblock %}
