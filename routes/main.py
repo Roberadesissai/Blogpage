@@ -127,7 +127,7 @@ def create_post():
             post.tags.append(tag)
         db.session.add(post)
         db.session.commit()
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.dashboard'))
     return render_template('create_post.html', title='New Post', form=form, legend='New Post')
 
 
@@ -187,12 +187,11 @@ def user_posts(username):
 @login_required
 def profile():
     posts_count = current_user.posts.count()
-    liked_posts_count = current_user.liked_posts.count()
+    # liked_posts_count = current_user.liked_posts.count()
     comments_count = current_user.comments.count()
     recent_posts = current_user.posts.order_by(Post.date_posted.desc()).limit(6).all()
     return render_template('profile.html', title='Profile',
                            posts_count=posts_count,
-                           liked_posts_count=liked_posts_count,
                            comments_count=comments_count,
                            recent_posts=recent_posts,
                            Post=Post) 
