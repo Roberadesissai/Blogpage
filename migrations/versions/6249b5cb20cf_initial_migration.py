@@ -1,8 +1,8 @@
-"""empty message
+"""Initial migration
 
-Revision ID: b976a62ef3fc
+Revision ID: 6249b5cb20cf
 Revises: 
-Create Date: 2024-09-10 02:00:18.155361
+Create Date: 2024-09-10 10:31:17.454896
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b976a62ef3fc'
+revision = '6249b5cb20cf'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -39,6 +39,7 @@ def upgrade():
     sa.Column('website', sa.String(length=200), nullable=True),
     sa.Column('last_message_read_time', sa.DateTime(), nullable=True),
     sa.Column('joined_date', sa.DateTime(), nullable=True),
+    sa.Column('profile_image', sa.String(length=20), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
@@ -133,13 +134,6 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('user_id', 'note_id')
     )
-    op.create_table('note_tags',
-    sa.Column('note_id', sa.Integer(), nullable=False),
-    sa.Column('tag_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['note_id'], ['note.id'], ),
-    sa.ForeignKeyConstraint(['tag_id'], ['tag.id'], ),
-    sa.PrimaryKeyConstraint('note_id', 'tag_id')
-    )
     op.create_table('post_likes',
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('post_id', sa.Integer(), nullable=False),
@@ -177,7 +171,6 @@ def downgrade():
     op.drop_table('saved_notes')
     op.drop_table('post_tags')
     op.drop_table('post_likes')
-    op.drop_table('note_tags')
     op.drop_table('note_likes')
     op.drop_table('note_bookmarks')
     op.drop_table('comment')

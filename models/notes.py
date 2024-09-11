@@ -1,17 +1,10 @@
 import json
 from app import db
 from datetime import datetime, timezone
-from openai import OpenAI
 from sqlalchemy.ext.hybrid import hybrid_property
-from .tag import Tag  # Change this line
-from sqlalchemy.dialects.postgresql import ARRAY
-from sqlalchemy.ext.mutable import MutableList
-
-note_tags = db.Table('note_tags',
-    db.Column('note_id', db.Integer, db.ForeignKey('note.id'), primary_key=True),
-    db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True)
-)
-
+from .tag import Tag
+from openai import OpenAI
+from .associations import note_tags, note_likes, note_bookmarks, saved_notes
 
 
 class Note(db.Model):
@@ -19,36 +12,30 @@ class Note(db.Model):
     title = db.Column(db.String(100), nullable=False)
     summary = db.Column(db.Text, nullable=False)
     content = db.Column(db.Text, nullable=False)
-    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone.utc))
+    date_posted = db.Column(
+        db.DateTime, nullable=False, default=datetime.now(timezone.utc)
+    )
     subject = db.Column(db.String(50), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    ratings = db.Column(db.Text, default='[]')
-    likes = db.relationship('User', secondary='note_likes', backref=db.backref('liked_notes', lazy='dynamic'))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    ratings = db.Column(db.Text, default="[]")
+    likes = db.relationship(
+        "User", secondary=note_likes, backref=db.backref("notes_liked", lazy="dynamic")
+    )
     dislikes = db.Column(db.Integer, default=0)
     image_file = db.Column(db.String(20), nullable=True)
-    comments = db.relationship('Comment', backref='note', lazy='dynamic')
-    tags = db.relationship('Tag', secondary=note_tags, backref=db.backref('notes', lazy='dynamic'))
-    bookmarks = db.relationship('User', secondary='note_bookmarks', backref=db.backref('bookmarked_notes', lazy='dynamic'))
-    note_likes = db.Table('note_likes',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('note_id', db.Integer, db.ForeignKey('note.id'), primary_key=True)
+    comments = db.relationship("Comment", backref="note", lazy="dynamic")
+    tags = db.relationship(
+        "Tag", secondary=note_tags, backref=db.backref("notes", lazy="dynamic")
     )
-    note_bookmarks = db.Table('note_bookmarks',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('note_id', db.Integer, db.ForeignKey('note.id'), primary_key=True)
+    bookmarks = db.relationship(
+        "User",
+        secondary=note_bookmarks,
+        backref=db.backref("bookmarked_notes", lazy="dynamic"),
     )
-    saved_by = db.relationship('User', secondary='saved_notes', backref=db.backref('saved_notes', lazy='dynamic'))
+    users_who_saved = db.relationship(
+        "User", secondary=saved_notes, backref=db.backref("notes_saved", lazy="dynamic")
+    )
     views = db.Column(db.Integer, default=0)
-
-
-
-    def __repr__(self):
-        return f"Note('{self.title}', '{self.date_posted}')"
-    
-    saved_notes = db.Table('saved_notes',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('note_id', db.Integer, db.ForeignKey('note.id'), primary_key=True)
-    )
 
     @property
     def ratings_list(self):
@@ -57,10 +44,13 @@ class Note(db.Model):
     @ratings_list.setter
     def ratings_list(self, value):
         self.ratings = json.dumps(value)
-    
+
     @hybrid_property
     def popularity_score(self):
-        return self.likes - self.dislikes + self.comments.count()
+        return len(self.likes) - self.dislikes + self.comments.count()
+
+    def __repr__(self):
+        return f"Note('{self.title}', '{self.date_posted}')"
 
     @staticmethod
     def format_with_ai(content, api_key):
@@ -142,9 +132,43 @@ class Note(db.Model):
               <p>Quote text here</p>
               <p class="text-indigo-500 mt-1 text-sm">- Source</p>
             </blockquote>
+           17. For graphs, create a description and placeholder:
+        <div class="bg-white p-4 my-3 rounded shadow border border-indigo-200">
+          <p class="font-semibold text-indigo-600">Graph:</p>
+          <p>[Detailed description of the graph]</p>
+          <div class="bg-gray-200 h-64 flex items-center justify-center text-gray-500 mt-2">
+            [Graph placeholder - Describe the type of graph and key elements]
+          </div>
+        </div>
 
-        Ensure the content is well-organized and follows a logical structure. Use the provided gradient color scheme consistently to create a cohesive and visually appealing design. Focus on readability and maintaining a clean, professional appearance.
-        """
+    18. For images from the browser:
+        <div class="bg-white p-4 my-3 rounded shadow border border-indigo-200">
+          <img src="/api/placeholder/400/300" alt="[Image description]" class="mx-auto">
+          <p class="text-sm text-gray-500 mt-2">[Image caption or description]</p>
+        </div>
+
+    19. For citations with links:
+        <div class="bg-white p-3 my-3 rounded shadow border-l-4 border-green-500">
+          <p class="font-semibold text-green-600">Citation:</p>
+          <p class="text-sm">[Author Name]. (Year). <a href="#" class="text-blue-600 hover:underline">[Title of the Work]</a>. [Other publication details]</p>
+        </div>
+    20. For references:
+        <div class="bg-white p-3 my-3 rounded shadow border-l-4 border-yellow-500">
+          <p class="font-semibold text-yellow-600">Reference:</p>
+          <p class="text-sm">[Author Name]. (Year). <em>[Title of the Work]</em>. [Other publication details]</p>
+        </div>
+    21. For footnotes:
+        <div class="bg-white p-3 my-3 rounded shadow border-l-4 border-pink-500">
+          <p class="font-semibold text-pink-600">Footnote:</p>
+          <p class="text-sm">[Footnote content]</p>
+        </div>
+
+
+    Ensure the content is well-organized and follows a logical structure. Use the provided gradient color scheme consistently to create a cohesive and visually appealing design. Focus on readability and maintaining a clean, professional appearance.
+
+    For graphs, provide a detailed description of what the graph should look like and what information it should convey. For images, use placeholder images and provide descriptive captions. For citations, include all relevant information and format them as links.
+    """
+
 
         messages = [
             {

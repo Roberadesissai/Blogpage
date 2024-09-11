@@ -4,6 +4,7 @@ from models import Post, User, Comment, Tag, Note
 from app import db
 from forms import PostForm, CommentForm, EditProfileForm, CreateNoteForm, NoteForm
 from models import Post
+from models.aimode import get_ai_response
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app
@@ -12,8 +13,13 @@ from datetime import datetime
 import secrets
 from PIL import Image
 from sqlalchemy import or_
+from openai import OpenAI
+from datetime import date
 
 main = Blueprint('main', __name__)
+
+YOUR_API_KEY = "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"
+client = OpenAI(api_key=YOUR_API_KEY, base_url="https://api.perplexity.ai")
 
 
 def save_image(form_image):
@@ -58,18 +64,23 @@ def post(post_id):
         return redirect(url_for('main.post', post_id=post_id))
     return render_template('post.html', title=post.title, post=post, comment_form=comment_form)
 
-@main.route('/post/<int:post_id>/like', methods=['POST'])
+
+@main.route("/post/<int:post_id>/like", methods=["POST"])
 @login_required
 def like_post(post_id):
     post = Post.query.get_or_404(post_id)
     if current_user in post.likes:
         post.likes.remove(current_user)
+        liked = False
     else:
         post.likes.append(current_user)
-    db.session.commit()
-    return jsonify({'likes': len(post.likes), 'liked': current_user in post.likes})
+        liked = True
 
-@main.route('/post/<int:post_id>/add_comment', methods=['POST'])
+    db.session.commit()
+    return jsonify({"success": True, "liked": liked, "likes_count": len(post.likes)})
+
+
+@main.route("/post/<int:post_id>/add_comment", methods=["POST"])
 @login_required
 def add_comment(post_id):
     post = Post.query.get_or_404(post_id)
@@ -78,12 +89,32 @@ def add_comment(post_id):
         comment = Comment(
             content=comment_form.content.data,
             post_id=post.id,
-            user_id=current_user.id
+            user_id=current_user.id,
+            note_id=None,  # Set this to None for post comments
         )
         db.session.add(comment)
         db.session.commit()
-        flash('Your comment has been added!', 'success')
-    return redirect(url_for('main.post', post_id=post_id))
+        flash("Your comment has been added!", "success")
+    return redirect(url_for("main.post", post_id=post_id))
+
+
+@main.route("/note/<int:note_id>/add_comment", methods=["POST"])
+@login_required
+def add_note_comment(note_id):
+    note = Note.query.get_or_404(note_id)
+    comment_form = CommentForm()
+    if comment_form.validate_on_submit():
+        comment = Comment(
+            content=comment_form.content.data,
+            note_id=note.id,
+            user_id=current_user.id,
+            post_id=None,  # Set this to None for note comments
+        )
+        db.session.add(comment)
+        db.session.commit()
+        flash("Your comment has been added!", "success")
+    return redirect(url_for("main.note", note_id=note_id))
+
 
 @main.route('/create_post', methods=['GET', 'POST'])
 @login_required
@@ -106,7 +137,6 @@ def create_post():
         flash('Your post has been created!', 'success')
         return redirect(url_for('main.index'))
     return render_template('create_post.html', title='New Post', form=form, legend='New Post')
-
 
 
 @main.route("/post/<int:post_id>/edit", methods=['GET', 'POST'])
@@ -220,7 +250,6 @@ def notes():
         query = query.filter(Note.views == 0)
     elif sort == 'saved':
         query = query.filter(Note.saved_by.any(id=current_user.id))
-        
 
     notes = query.paginate(page=page, per_page=9)
 
@@ -244,11 +273,54 @@ def notes():
         'Sociology': '👥'  # Added Sociology
     }
 
-
     return render_template('notes.html', notes=notes, subjects=subjects, subject_icons=subject_icons,
                            current_subject=subject, current_sort=sort, search_query=search)
 
-@main.route('/note/<int:note_id>/like', methods=['POST'])
+
+@main.route("/chatcanva", methods=["GET", "POST"])
+def chatcanva():
+    if "chat_history" not in session:
+        session["chat_history"] = []
+
+    if request.method == "POST":
+        user_message = request.form.get("message")
+        if user_message:
+            try:
+                # Get AI response
+                ai_response = get_ai_response(user_message)
+
+                # Add user message and AI response to chat history
+                session["chat_history"].append(
+                    {"role": "user", "content": user_message}
+                )
+                session["chat_history"].append(
+                    {"role": "assistant", "content": ai_response}
+                )
+
+                session.modified = True
+
+                return jsonify({"response": ai_response})
+            except Exception as e:
+                print(f"Error in AI response generation: {str(e)}")
+                return (
+                    jsonify(
+                        {"error": "An error occurred while processing your request."}
+                    ),
+                    500,
+                )
+        else:
+            return jsonify({"error": "No message provided"}), 400
+
+    # For GET requests, render the template
+    return render_template(
+        "chatcanva.html",
+        chat_history=session.get("chat_history", []),
+        username="Student",  # Replace with actual username logic
+        date=date,
+    )
+
+
+@main.route("/note/<int:note_id>/like", methods=["POST"])
 @login_required
 def like_note(note_id):
     note = Note.query.get_or_404(note_id)

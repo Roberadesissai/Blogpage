@@ -12,10 +12,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-center min-h-[calc(100vh-6rem)] px-4 sm:px-6 lg:px-8">
+    <!-- Adjusted height calculation -->
     <div class="w-full max-w-md">
         <div class="text-center mb-10">
-            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 mb-2">
+            <h1
+                class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 mb-2">
                 Welcome Back
             </h1>
             <div class="h-1 w-32 mx-auto bg-gradient-to-r from-purple-600 to-indigo-600"></div>
@@ -23,19 +25,24 @@
                 Sign in to continue your academic journey
             </p>
         </div>
-        
+
         <form class="bg-white shadow-2xl rounded-xl px-8 pt-6 pb-8 mb-4" method="POST">
             <div class="mb-4">
                 <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
-                <input id="username" name="username" type="text" required class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter your username">
+                <input id="username" name="username" type="text" required
+                    class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter your username">
             </div>
             <div class="mb-6">
                 <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                <input id="password" name="password" type="password" required class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Enter your password">
+                <input id="password" name="password" type="password" required
+                    class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Enter your password">
             </div>
             <div class="flex items-center justify-between mb-6">
                 <div class="flex items-center">
-                    <input id="remember_me" name="remember_me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                    <input id="remember_me" name="remember_me" type="checkbox"
+                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                     <label for="remember_me" class="ml-2 block text-sm text-gray-900">
                         Remember me
                     </label>
@@ -47,12 +54,13 @@
                 </div>
             </div>
             <div>
-                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
+                <button type="submit"
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
                     Sign In
                 </button>
             </div>
         </form>
-        
+
         <div class="text-center mt-4">
             <a href="{{ url_for('auth.register') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
                 Don't have an account? Sign up
@@ -61,6 +69,10 @@
     </div>
 </div>
 {% endblock %}
+
+
+
+
 
 <div id="flash-message-container" class="fixed top-10 right-5 z-50"></div>
 

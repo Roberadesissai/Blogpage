@@ -22,22 +22,54 @@
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">Knowledge Nexus</span>
             </h1>
             <div class="flex items-center space-x-4">
-                <button class="tool-btn" title="View Achievements">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-                    </svg>
-                </button>
-                <button class="tool-btn" title="Notifications">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                    </svg>
-                </button>
-                <button class="tool-btn" title="Settings">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                </button>
+            <a href="{{ url_for('main.chatcanva') }}" class="tool-btn" title="View Achievements">
+                <svg class="w-6 h-6" fill="url(#gradient)" stroke="url(#gradient)" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#7C3AED" /> <!-- Purple -->
+                            <stop offset="100%" stop-color="#4F46E5" /> <!-- Indigo -->
+                        </linearGradient>
+                    </defs>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
+                    </path>
+                </svg>
+            </a>
+
+
+            <button class="tool-btn" title="Notifications">
+                <svg class="w-6 h-6" fill="url(#gradient-notifications)" stroke="url(#gradient-notifications)" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradient-notifications" x1="0" y1="0" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#7C3AED" /> <!-- Purple -->
+                            <stop offset="100%" stop-color="#4F46E5" /> <!-- Indigo -->
+                        </linearGradient>
+                    </defs>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                    </path>
+                </svg>
+            </button>
+
+            <button class="tool-btn" title="Settings">
+                <svg class="w-6 h-6" fill="url(#gradient-settings)" stroke="url(#gradient-settings)" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradient-settings" x1="0" y1="0" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#7C3AED" /> <!-- Purple -->
+                            <stop offset="100%" stop-color="#4F46E5" /> <!-- Indigo -->
+                        </linearGradient>
+                    </defs>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z">
+                    </path>
+                </svg>
+            </button>
+
             </div>
         </div>
 
@@ -49,30 +81,34 @@
             {% endfor %}
         </div>
 
-        <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+        <form id="filter-form" class="flex flex-col md:flex-row justify-between items-center mb-8">
             <div class="relative w-full md:w-1/2 mb-4 md:mb-0">
-                <input type="text" id="search" placeholder="Explore knowledge..." value="{{ search_query }}" class="w-full pl-10 pr-4 py-2 border-2 border-purple-300 rounded-full focus:outline-none focus:border-indigo-500 transition-colors">
-                <svg class="absolute left-3 top-2.5 h-5 w-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                <input type="text" id="search" name="search" placeholder="Explore knowledge..." value="{{ search_query }}"
+                    class="w-full pl-10 pr-4 py-2 border-2 border-purple-300 rounded-full focus:outline-none focus:border-indigo-500 transition-colors">
+                <svg class="absolute left-3 top-2.5 h-5 w-5 text-purple-400" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
             <div class="flex space-x-2">
-                <select id="sort-by" class="border-2 border-purple-300 rounded-full px-4 py-2 focus:outline-none focus:border-indigo-500 transition-colors">
-                    <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest</option>
-                    <option value="popular" {% if current_sort == 'popular' %}selected{% endif %}>Popular</option>
-                    <option value="rated" {% if current_sort == 'rated' %}selected{% endif %}>Top Rated</option>
-                    <option value="oldest" {% if current_sort == 'oldest' %}selected{% endif %}>Oldest</option>
-                    <option value="unrated" {% if current_sort == 'unrated' %}selected{% endif %}>Unrated</option>
-                    <option value="unseen" {% if current_sort == 'unseen' %}selected{% endif %}>Unseen</option>
-                    <option value="saved" {% if current_sort == 'saved' %}selected{% endif %}>Saved</option>
+                <select id="sort-by" name="sort"
+                    class="border-2 border-purple-300 rounded-full px-4 py-2 focus:outline-none focus:border-indigo-500 transition-colors">
+                    <option value="newest" {% if current_sort=='newest' %}selected{% endif %}>Newest</option>
+                    <option value="popular" {% if current_sort=='popular' %}selected{% endif %}>Popular</option>
+                    <option value="rated" {% if current_sort=='rated' %}selected{% endif %}>Top Rated</option>
+                    <option value="oldest" {% if current_sort=='oldest' %}selected{% endif %}>Oldest</option>
+                    <option value="unrated" {% if current_sort=='unrated' %}selected{% endif %}>Unrated</option>
+                    <option value="unseen" {% if current_sort=='unseen' %}selected{% endif %}>Unseen</option>
+                    <option value="saved" {% if current_sort=='saved' %}selected{% endif %}>Saved</option>
                 </select>
-                <button class="tool-btn" title="Advanced Filters">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-                    </svg>
+                <button type="submit"
+                    class="bg-indigo-500 text-white px-4 py-2 rounded-full hover:bg-indigo-600 transition-colors">
+                    Apply Filters
                 </button>
             </div>
-        </div>
+            <input type="hidden" id="subject" name="subject" value="{{ current_subject }}">
+        </form>
 
         <div class="text-center mb-12">
             <a href="{{ url_for('main.create_note') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300">
@@ -260,6 +296,24 @@
 </div>
 
 <script>
+        function redirectToChatcanva() {
+            // Create a form element
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/chatcanva';
+
+            // Add CSRF token to the form
+            const csrfToken = document.querySelector('input[name="csrf_token"]').value; // Ensure this exists in your base template
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrf_token';
+            csrfInput.value = csrfToken;
+            form.appendChild(csrfInput);
+
+            // Append and submit the form
+            document.body.appendChild(form);
+            form.submit();
+        }
 document.addEventListener('DOMContentLoaded', function() {
     const categoryButtons = document.querySelectorAll('.category-btn');
     const searchInput = document.getElementById('search');

@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}AI Study Companion - Your Interactive Notebook{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Permanent+Marker&display=swap"
+    rel="stylesheet">
+<style>
+    .paper {
+        background-color: #fffcf6;
+        background-image:
+            linear-gradient(#cda58d 1px, transparent 1px),
+            linear-gradient(90deg, #cda58d 1px, transparent 1px);
+        background-size: 100% 1.5em, 1.5em 100%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid #d3c5ab;
+        border-radius: 2px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .paper::before {
+        content: '';
+        position: absolute;
+        left: 40px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background-color: #fc8585;
+    }
+
+    .hole {
+        position: absolute;
+        left: 15px;
+        width: 20px;
+        height: 20px;
+        background-color: #e0d9c5;
+        border-radius: 50%;
+        box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .hole-top {
+        top: 5%;
+    }
+
+    .hole-middle {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .hole-bottom {
+        bottom: 5%;
+    }
+
+    .handwriting {
+        font-family: 'Nanum Pen Script', cursive;
+    }
+
+    .header-text {
+        font-family: 'Permanent Marker', cursive;
+    }
+
+    .chat-bubble {
+        background-color: transparent;
+        border: none;
+    }
+
+    .user-input {
+        background-color: transparent;
+        border: none;
+        border-bottom: 2px dashed #8b4513;
+    }
+
+    .hand-drawn-btn {
+        background-color: transparent;
+        border: 2px solid #8b4513;
+        border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+        transition: all 0.3s ease;
+    }
+
+    .hand-drawn-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-decoration {
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .header-decoration::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: repeating-linear-gradient(90deg,
+                #8b4513,
+                #8b4513 5px,
+                transparent 5px,
+                transparent 10px);
+    }
+</style>
+
+<div class="min-h-screen py-6 flex flex-col justify-center items-center">
+    <div class="w-full max-w-4xl mx-auto px-4">
+        <div class="paper p-8 min-h-[800px] relative">
+            <div class="hole hole-top"></div>
+            <div class="hole hole-middle"></div>
+            <div class="hole hole-bottom"></div>
+
+            <div class="header-decoration mb-6">
+                <h1 class="text-3xl font-bold mb-2 mr-2 header-text text-gray-500 flex items-center justify-between">
+                    <span><i class="fas fa-pen text-gray-500 mr-2"></i> Note Your Questions</span>
+                    <span class="text-2xl handwriting">Name: <u>{{ current_user }}</u></span>
+                </h1>
+            </div>
+
+            <div class="mb-6 flex justify-between">
+                <div class="handwriting text-lg">
+                    <i class="fas fa-calendar-alt text-green-600 mr-2"></i> {{ date.today().strftime('%B %d, %Y') }}
+                </div>
+                <div class="handwriting text-lg">
+                    <i class="fas fa-book text-blue-600 mr-2"></i> AI-Assisted Learning
+                </div>
+            </div>
+
+            <div id="chat-container" class="space-y-4 mb-4 h-[500px] overflow-y-auto pr-4">
+                {% for message in chat_history %}
+                <div class="flex {% if message.role == 'user' %}justify-end{% endif %}">
+                    <div class="chat-bubble max-w-xs lg:max-w-md px-2 py-1">
+                        <p
+                            class="handwriting text-xl {% if message.role == 'user' %}text-blue-800{% else %}text-red-800{% endif %}">
+                            {% if message.role == 'user' %}
+                            <i class="fas fa-user text-blue-600 mr-2"></i>
+                            {% else %}
+                            <i class="fas fa-robot text-red-600 mr-2"></i>
+                            {% endif %}
+                            {{ message.content }}
+                        </p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div id="typing-indicator" class="handwriting text-lg text-gray-600 mb-2 hidden">
+                <i class="fas fa-pen-fancy animate-pulse mr-2"></i> AI is crafting a response...
+            </div>
+
+            <form id="chat-form" class="flex items-center mb-4 bg-yellow-100 p-4 rounded-lg shadow-inner">
+                <input type="text" id="user-input"
+                    class="flex-grow mr-2 p-2 user-input handwriting text-xl bg-transparent"
+                    placeholder="Pen your question here...">
+                <button type="submit"
+                    class="hand-drawn-btn px-6 py-2 handwriting text-xl hover:bg-yellow-200 transition-colors duration-300">
+                    <i class="fas fa-paper-plane text-indigo-600 mr-2"></i> Send
+                </button>
+            </form>
+
+            <div class="flex justify-between items-center">
+                <button id="clear-chat"
+                    class="hand-drawn-btn px-6 py-2 handwriting text-xl hover:bg-red-100 transition-colors duration-300">
+                    <i class="fas fa-eraser text-red-600 mr-2"></i> Erase Page
+                </button>
+                <div class="handwriting text-lg">
+                    <i class="fas fa-save text-green-600 mr-2"></i> Auto-saving...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('chat-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const userInput = document.getElementById('user-input');
+        const message = userInput.value.trim();
+        if (message) {
+            appendMessage('user', message);
+            userInput.value = '';
+            document.getElementById('typing-indicator').classList.remove('hidden');
+
+            fetch('/chatcanva', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'message': message
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('typing-indicator').classList.add('hidden');
+                    if (data.error) {
+                        appendMessage('assistant', 'Sorry, an error occurred: ' + data.error);
+                    } else {
+                        appendMessage('assistant', data.response);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('typing-indicator').classList.add('hidden');
+                    appendMessage('assistant', 'Sorry, an error occurred while processing your request.');
+                });
+        }
+    });
+
+    function appendMessage(role, content) {
+        const chatContainer = document.getElementById('chat-container');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `flex ${role === 'user' ? 'justify-end' : ''}`;
+        messageDiv.innerHTML = `
+        <div class="chat-bubble max-w-xs lg:max-w-md px-2 py-1">
+            <p class="handwriting text-xl ${role === 'user' ? 'text-blue-800' : 'text-red-800'}">
+                ${role === 'user' ? '<i class="fas fa-user text-blue-600 mr-2"></i>' : '<i class="fas fa-robot text-red-600 mr-2"></i>'}
+                ${content}
+            </p>
+        </div>
+    `;
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    document.getElementById('clear-chat').addEventListener('click', function () {
+        if (confirm('Are you sure you want to erase this page? All your notes will be lost!')) {
+            document.getElementById('chat-container').innerHTML = '';
+            fetch('/chatcanva', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'clear_history': 'true'
+                })
+            });
+        }
+    });
+</script>
+{% endblock %}
